@@ -1,0 +1,24 @@
+﻿@model BasicWordDetails;
+@{
+	ViewData["Title"] = "DictionaryMeanings";
+}
+
+<h1>Dictionary</h1>
+
+
+
+<div class="row">
+	<div class="col-md-12">
+		<p>word:@Model.Word</p>
+	</div>
+	<div class="col-md-12">
+		<p>Definition:@Model.DefaultDefinition</p>
+	</div>
+	<div class="col-md-12">
+		<p>Phonetic:@Model.DefaultPhoneticsText</p>
+	</div>
+	<div class="col-md-12">
+		<p>Origin:@Model.Origin</p>
+	</div>
+
+</div>

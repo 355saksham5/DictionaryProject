@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>cd80d9b6-528d-4d83-8b9f-8b3806ce4b3c</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.13" />
+    <PackageReference Include="Refit" Version="6.3.2" />
+    <PackageReference Include="Refit.HttpClientFactory" Version="6.3.2" />
+    <PackageReference Include="Refit.Newtonsoft.Json" Version="6.3.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DictionaryApi\DictionaryApi.csproj" />
+  </ItemGroup>
+
+</Project>
