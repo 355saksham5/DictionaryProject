@@ -1,5 +1,9 @@
+using Azure.Core;
 using DictionaryApi.Extensions;
+using DictionaryApp.Services;
 using Refit;
+using System.Linq;
+using System.Net.Http.Headers;
 using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,11 +17,16 @@ var settings = new RefitSettings()
 {
 	ContentSerializer = new SystemTextJsonContentSerializer(options)
 };
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddControllersWithViews();
-builder.Services.AddRefitClient<IDictionaryApi>(settings).ConfigureHttpClient(c => c.BaseAddress = new Uri(builder.Configuration["BaseAddresses:DictionaryApi"]));
-builder.Services.AddJwtTokenServices(builder.Configuration);
-builder.Services.AddAuthorization();
+builder.Services.AddTransient<AuthHeaderHandler>();
+builder.Services.AddRefitClient<IDictionaryApi>(settings).ConfigureHttpClient(c =>
+{
+	c.BaseAddress = new Uri(builder.Configuration["BaseAddresses:DictionaryApi"]);
+	//c.DefaultRequestHeaders.Add();
+}).AddHttpMessageHandler<AuthHeaderHandler>();
 builder.Services.AddMvc();
+
 var app = builder.Build();
 if (!app.Environment.IsDevelopment())
 {
@@ -27,10 +36,7 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
 app.UseRouting();
-app.UseAuthentication();
-app.UseAuthorization();
 
 app.MapControllerRoute(
 	name: "default",

@@ -5,10 +5,10 @@ using DictionaryApp.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 
 namespace DictionaryApp.Controllers
 {
-	[AllowAnonymous]
 	public class AccountController : Controller
 	{
 		private readonly ILogger<HomeController> _logger;
@@ -66,8 +66,9 @@ namespace DictionaryApp.Controllers
                 };
                 var result = await dictionary.LogIn(logInCred);
 
-                if (result)
+                if (result!=null)
                 {
+                    HttpContext.Response.Cookies.Append("Authorization",result, new CookieOptions { HttpOnly = true });
                     return RedirectToAction("default", "home");
                 }
                 ModelState.AddModelError(string.Empty, "Invalid Login Attempt");

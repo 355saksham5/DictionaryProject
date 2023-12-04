@@ -3,8 +3,8 @@ using DictionaryApi.BusinessLayer.Services.IServices;
 using DictionaryApi.Data;
 using DictionaryApi.DataAccess.DbHandlers;
 using DictionaryApi.DataAccess.DbHandlers.IDbHandlers;
+using DictionaryApi.Extensions;
 using DictionaryApi.ExternalApiHandlers.IExternalApiHandlers;
-using DictionaryApi.Helpers;
 using DictionaryApi.Models;
 using DictionaryApi.Models.DTOs;
 using Microsoft.AspNetCore.Identity;
@@ -43,7 +43,10 @@ builder.Services.AddScoped<UserIdentityResult>();
 builder.Services.AddScoped<ICache, Cache>();
 builder.Services.AddScoped<IMeaningApiMapper, MeaningApiMapper>();
 builder.Services.AddScoped<ISuggestionService,SuggestionService>();
+builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
 builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection(JwtOptions.SectionName));
+builder.Services.AddJwtTokenServices(builder.Configuration);
+builder.Services.AddAuthorization();
 var app = builder.Build();
 
 
@@ -55,6 +58,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

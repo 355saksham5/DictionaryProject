@@ -1,0 +1,65 @@
+﻿@model Definition
+
+@{
+    ViewBag.Title = "Definition";
+}
+
+
+<style>
+    body {
+        background-color: #f8f9fa;
+    }
+
+    h1 {
+        color: #007bff;
+    }
+
+    form {
+        max-width: 400px;
+        margin: 0 auto;
+        background-color: #fff;
+        padding: 20px;
+        margin-top: 50px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    label {
+        font-weight: bold;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        border: 1px solid #007bff;
+    }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border: 1px solid #0056b3;
+        }
+</style>
+
+
+<div class="row Canvas">
+
+    <div class="col-md-12">
+
+
+        <form class=" mycard">
+            <h1>Meaning</h1>
+           <div>
+                <p>@Model.PartOfSpeech?.Name</p><br>
+               <p>Definition:@Model.DefinitionText</p><br>
+               <p>Example:@Model.Example</p><br>
+           </div>
+
+        </form>
+    </div>
+
+    <div>
+    </div>
+</div>

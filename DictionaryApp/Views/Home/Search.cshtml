@@ -3,22 +3,42 @@
 	ViewData["Title"] = "DictionaryMeanings";
 }
 
-<h1>Dictionary</h1>
+@{
+	if(Model.Origin==null)
+		Model.Origin="No Origin Found";
+	if(Model.DefaultDefinition==null)
+		Model.DefaultDefinition = "No Definition Found Found";
+	if (Model.DefaultPhoneticsText == null)
+		Model.DefaultPhoneticsText = "No Phonetic Found";
+}
 
 
+<div class=" Canvas">
+	<div class="col-md-3">
+		<div class="wordH d-flex gap-4">
+			<h1>@Model.Word</h1>
+			@if (Model.IsPronounceLnkPresent == true)
+			{
+				<a class="speaker" asp-method="get" asp-action="Pronounciation" asp-controller="Home" asp-route-wordId=@Model.Id> <i class='fas fa-volume-up '></i></a>
+			}	
+		</div>
+	</div>
+	<div class="typewriter">
+		<p>Definition:@Model.DefaultDefinition<br>Phonetic:@Model.DefaultPhoneticsText<br>Origin:@Model.Origin</p>
+		<br>
+	</div>
 
-<div class="row">
-	<div class="col-md-12">
-		<p>word:@Model.Word</p>
+	<div class="d-flex gap-4 lexBar">
+		<a class="btn btn-primary" asp-method="get" asp-action="Antonyms" asp-controller="Home" asp-route-wordId=@Model.Id>Antonyms</a>
+		<a class="btn btn-primary" asp-method="get" asp-action="Synonyms" asp-controller="Home" asp-route-wordId=@Model.Id>Synonyms</a>
+		
 	</div>
-	<div class="col-md-12">
-		<p>Definition:@Model.DefaultDefinition</p>
+	<br><br>
+	<div class="d-flex gap-4 lexBar">
+		@for(int i=1;i<=Model.NumberOfDefinitions;i++)
+		{
+			<a class="btn btn-primary" asp-method="get" asp-action="Definition" asp-controller="Home" asp-route-index=i asp-route-itemid=@Model.Id>Definition @i.ToString()</a>
+		}
 	</div>
-	<div class="col-md-12">
-		<p>Phonetic:@Model.DefaultPhoneticsText</p>
-	</div>
-	<div class="col-md-12">
-		<p>Origin:@Model.Origin</p>
-	</div>
-
 </div>
+

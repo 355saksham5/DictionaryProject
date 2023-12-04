@@ -4,6 +4,7 @@ using DictionaryApi.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DictionaryApi.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231204091341_migration2")]
+    partial class migration2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -167,31 +170,14 @@ namespace DictionaryApi.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<Guid?>("UserCacheId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Word")
-                        .IsRequired()
+                    b.Property<string>("RowNumber")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid?>("WordId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserCacheId");
-
-                    b.ToTable("CachedWord");
-                });
-
-            modelBuilder.Entity("DictionaryApi.Models.UserCache.UserCache", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid?>("UserId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Word")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -416,13 +402,6 @@ namespace DictionaryApi.Migrations
                         .HasForeignKey("SynonymsId");
                 });
 
-            modelBuilder.Entity("DictionaryApi.Models.UserCache.CachedWord", b =>
-                {
-                    b.HasOne("DictionaryApi.Models.UserCache.UserCache", null)
-                        .WithMany("Cache")
-                        .HasForeignKey("UserCacheId");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -482,11 +461,6 @@ namespace DictionaryApi.Migrations
             modelBuilder.Entity("DictionaryApi.Models.DTOs.Synonyms", b =>
                 {
                     b.Navigation("Synonym");
-                });
-
-            modelBuilder.Entity("DictionaryApi.Models.UserCache.UserCache", b =>
-                {
-                    b.Navigation("Cache");
                 });
 #pragma warning restore 612, 618
         }

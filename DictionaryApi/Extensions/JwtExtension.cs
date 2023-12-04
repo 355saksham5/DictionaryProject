@@ -1,11 +1,11 @@
-﻿using DictionaryApi.Helpers;
+﻿using DictionaryApi.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
 namespace DictionaryApi.Extensions
 {
-	public static class JwtExtensions
+    public static class JwtExtensions
 	{
 		public static void AddJwtTokenServices(this IServiceCollection services, IConfiguration configuration)
 		{
@@ -19,26 +19,26 @@ namespace DictionaryApi.Extensions
 				options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
 			}).AddJwtBearer(options =>
 			{
-				options.SaveToken = true;
+				//options.SaveToken = true;
 				options.TokenValidationParameters = new TokenValidationParameters()
 				{
 					IssuerSigningKey =
 						new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtConfig.IssuerSigningKey)),
 					ValidIssuer = jwtConfig.Issuer,
 					ValidAudience = jwtConfig.Audience,
-					ValidateIssuer = true,
-					ValidateAudience = true,
+					ValidateIssuer = false, // change to true? error
+                    ValidateAudience = false,  // change to true? error
 					ValidateIssuerSigningKey = true,
 					ValidateLifetime = true
 				};
-				options.Events = new JwtBearerEvents
-				{
-					OnMessageReceived = context =>
-					{
-						context.Token = context.Request.Cookies["CookieName"];
-						return Task.CompletedTask;
-					}
-				};
+				//options.Events = new JwtBearerEvents
+				//{
+				//	OnMessageReceived = context =>
+				//	{
+				//		context.Token = context.Request.Cookies["Authorization"];
+				//		return Task.CompletedTask;
+				//	}
+				//};
 			});
 		}
 	}

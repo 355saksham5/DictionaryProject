@@ -1,9 +1,11 @@
 ﻿using DictionaryApi.BusinessLayer.Services.IServices;
 using DictionaryApi.Models.DTOs;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DictionaryApi.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("[action]")]
     public class WordController : ControllerBase
@@ -13,6 +15,7 @@ namespace DictionaryApi.Controllers
         {
             this.wordDetails = wordDetail;
         }
+
 
         [HttpGet("{queryWord}")]
 

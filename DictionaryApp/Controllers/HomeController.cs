@@ -1,11 +1,11 @@
-﻿using DictionaryApp.Models;
+﻿using DictionaryApi.Models.DTOs;
+using DictionaryApp.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
 namespace DictionaryApp.Controllers
 {
-	[Authorize]
 	public class HomeController : Controller
 	{
 		private readonly ILogger<HomeController> _logger;
@@ -17,7 +17,6 @@ namespace DictionaryApp.Controllers
 			this.dictionary = dictionary;
 		}
 
-		[AllowAnonymous]
 		[HttpGet]
 		public async Task<IActionResult> Default()
 		{
@@ -36,12 +35,13 @@ namespace DictionaryApp.Controllers
 			var antonyms= await dictionary.GetAntonyms(wordId);
 			return View(antonyms);
 		}
-		[HttpGet]
+        
+        [HttpGet]
 		public async Task<IActionResult> Synonyms(Guid wordId)
 		{
 			var synonyms = await dictionary.GetSynonyms(wordId);
 			return View(synonyms);
-		}
+        }
 		[HttpGet]
 		public async Task<IActionResult> Definition(int index , Guid wordId)
 		{

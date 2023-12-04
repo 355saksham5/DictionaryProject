@@ -2,6 +2,7 @@
 using DictionaryApi.DataAccess.DbHandlers.IDbHandlers;
 using DictionaryApi.Models.DTOs;
 using DictionaryApi.Models.MeaningApi;
+using System;
 
 namespace DictionaryApi.DataAccess.DbHandlers
 {
@@ -15,8 +16,8 @@ namespace DictionaryApi.DataAccess.DbHandlers
         }
 
         public async Task AddDetails(BasicWordDetails wordDetail)
-        {
-            await context.AddAsync(wordDetail);
+		{
+			await context.AddAsync(wordDetail);
             await context.SaveChangesAsync();
         }
 

@@ -1,10 +1,12 @@
-﻿using DictionaryApi.Models;
+﻿using DictionaryApi.BusinessLayer.Services.IServices;
+using DictionaryApi.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DictionaryApi.Controllers
 {
+	[AllowAnonymous]
 	[ApiController]
 	[Route("[action]")]
 	public class UserController : Controller
@@ -12,13 +14,15 @@ namespace DictionaryApi.Controllers
 		private readonly UserManager<IdentityUser> userManager;
 		private readonly SignInManager<IdentityUser> signInManager;
 		private UserIdentityResult result;
+        private IJwtTokenService jwt;
 
-		public UserController(UserManager<IdentityUser> userManager,
-			SignInManager<IdentityUser> signInManager, UserIdentityResult result)
+        public UserController(UserManager<IdentityUser> userManager,
+			SignInManager<IdentityUser> signInManager, UserIdentityResult result, IJwtTokenService jwt)
 		{
 			this.userManager = userManager;
 			this.signInManager = signInManager;
 			this.result = result;
+			this.jwt = jwt;
 		}
 
 
@@ -29,7 +33,7 @@ namespace DictionaryApi.Controllers
 		}
 
 		[HttpPost]
-		public async Task<UserIdentityResult> Register(IdentityUser user, string password)
+		public async Task<UserIdentityResult> Register([FromBody]IdentityUser user,[FromQuery] string password)
 		{
 			var resultOrignal = await userManager.CreateAsync(user,password);
             result.Succeeded = resultOrignal.Succeeded;
@@ -42,11 +46,17 @@ namespace DictionaryApi.Controllers
 		}
 
 		[HttpPost]
-		public async Task<bool> Login(LoginModel model)
+		public async Task<string?> Login([FromBody] LoginModel model)
 		{
-			var resultOrignal = await signInManager.PasswordSignInAsync(
+			var result = await signInManager.PasswordSignInAsync(
 					model.Email, model.Password, model.RememberMe, false);
-            return resultOrignal.Succeeded;
+			if(result.Succeeded)
+			{
+				var userId = userManager.Users.FirstOrDefault(user=>user.UserName==model.Email).Id;
+				var token = await jwt.CreateToken(userId);
+				return token;
+            }
+			return null;  // add correct code
 		}
 	}
 }

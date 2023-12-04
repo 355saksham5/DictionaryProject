@@ -1,9 +1,11 @@
 ﻿using DictionaryApi.BusinessLayer.Services.IServices;
 using DictionaryApi.ExternalApiHandlers.IExternalApiHandlers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DictionaryApi.Controllers
 {
+    [AllowAnonymous]
     [ApiController]
     [Route("[controller]")]
     public class SuggestionController : ControllerBase
