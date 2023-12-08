@@ -1,22 +1,14 @@
-﻿@model IEnumerable<string>
+﻿@model List<CachedWord>
 
 @{
-    ViewBag.Title = "Antonyms";
+    ViewBag.Title = "History";
 }
 
 
 <style>
-    body {
-        background-color: #f8f9fa;
-    }
-
-    h1 {
-        color: #007bff;
-    }
-
     myform {
         position: absolute;
-        z-index: 0;
+        z-index:0;
         max-width: 400px;
         margin: 0 auto;
         background-color: #fff;
@@ -24,6 +16,13 @@
         margin-top: 50px;
         border-radius: 10px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    body {
+        background-color: #f8f9fa;
+    }
+
+    h1 {
+        color: #007bff;
     }
 
     .form-group {
@@ -52,21 +51,31 @@
 
 
         <myform class=" mycard">
-            <h1>Antonyms</h1>
+            <h1>@ViewBag.Title</h1>
             <ul class="ScrollStyle">
-                @if(Model.Count()==0){
+                @if (Model.Count() == 0)
+                {
                     <li>
-                        <p>No word<br></p>
+                        <p>No History<br></p>
                     </li>
                 }
-                else { foreach (var antonym in Model)
+                else
+                {
+                    foreach (var word in Model)
                     {
                         <li>
-                            <p>@antonym<br></p>
+
+                            <a asp-action="SearchById" asp-controller="Home" asp-route-wordId=@word.WordId class ="btn btn-primary py-2">@word.Word</a>
+                            <br></br>
                         </li>
-                    } }
+                    }
+                }
             </ul>
+            <form class="clrBtn" asp-action="ClearCache" asp-controller="history" method="post">
+                <button class="btn btn-danger" type="submit">Clear</button>
+            </form>
         </myform>
+        
     </div>
 
     <div>

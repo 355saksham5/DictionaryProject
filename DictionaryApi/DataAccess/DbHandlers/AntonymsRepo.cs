@@ -19,7 +19,8 @@ namespace DictionaryApi.DataAccess.DbHandlers
 
 		public async Task<IEnumerable<string>> GetAntonyms(Guid BasicWordDetailsId)
 		{
-			var words = context.Antonyms.Where(antonym=>antonym.BasicWordDetailsId==BasicWordDetailsId).Select(antonym=>antonym.Antonym).SelectMany(word=>word);
+			var words = context.Antonyms.Where(antonym=>antonym.BasicWordDetailsId==BasicWordDetailsId)
+				.Select(antonym=>antonym.Antonym).SelectMany(word=>word);
 			return words.Select(word=>word.Word).ToList();
 
 		}

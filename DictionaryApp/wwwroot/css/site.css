@@ -359,3 +359,11 @@ body {
     max-height: 150px;
     overflow-y: scroll;
 }
+.ScrollStyleX {
+    overflow-x: scroll;
+    max-width: 12000px;
+}
+.clrBtn
+{
+    margin-left:300px;
+}

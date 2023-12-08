@@ -27,9 +27,15 @@ namespace DictionaryApi.DataAccess.DbHandlers
 			await context.SaveChangesAsync();
 		}
 
-        public async Task<BasicWordDetails> GetDetails(string word)
+        public async Task<BasicWordDetails?> GetDetails(string word)
         {
             return context.BasicWordDetails.FirstOrDefault(context => context.Word == word);
+        }
+
+        public async Task<BasicWordDetails?> GetDetailsById(Guid wordId)
+        {
+            var wordDetails = await context.BasicWordDetails.FindAsync(wordId);
+            return wordDetails;
         }
 
         public async Task<BasicWordDetails> UpdateDetails(BasicWordDetails wordDetails)

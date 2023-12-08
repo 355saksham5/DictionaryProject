@@ -23,13 +23,19 @@ namespace DictionaryApp.Controllers
 			return View();
 		}
 
-		[HttpPost]
+		[HttpGet]
 		public async Task<IActionResult> Search(Word queryWord)
 		{
 			var wordDetails = await dictionary.GetWordDetails(queryWord.word);
 			return View(wordDetails);
 		}
-		[HttpGet]
+        [HttpGet]
+        public async Task<IActionResult> SearchById(Guid wordId)
+        {
+            var wordDetails = await dictionary.GetWordDetailsById(wordId);
+            return View("Search",wordDetails);
+        }
+        [HttpGet]
 		public async Task<IActionResult> Antonyms(Guid wordId)
 		{
 			var antonyms= await dictionary.GetAntonyms(wordId);
@@ -52,7 +58,7 @@ namespace DictionaryApp.Controllers
 		public async Task<IActionResult> Pronounciation(Guid wordId)
 		{
 			var pronounciation = await dictionary.GetPronounciation(wordId);
-			return View(pronounciation);
+			return Redirect(pronounciation);
 		}
 	}
 }

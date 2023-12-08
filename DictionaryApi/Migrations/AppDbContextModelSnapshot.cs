@@ -161,13 +161,8 @@ namespace DictionaryApi.Migrations
 
             modelBuilder.Entity("DictionaryApi.Models.UserCache.CachedWord", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<Guid?>("UserCacheId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Word")
@@ -179,8 +174,6 @@ namespace DictionaryApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserCacheId");
-
                     b.ToTable("CachedWord");
                 });
 
@@ -190,10 +183,18 @@ namespace DictionaryApi.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid>("CacheId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("SearchTime")
+                        .HasColumnType("datetime2");
+
                     b.Property<Guid?>("UserId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CacheId");
 
                     b.ToTable("UserCache");
                 });
@@ -416,11 +417,15 @@ namespace DictionaryApi.Migrations
                         .HasForeignKey("SynonymsId");
                 });
 
-            modelBuilder.Entity("DictionaryApi.Models.UserCache.CachedWord", b =>
+            modelBuilder.Entity("DictionaryApi.Models.UserCache.UserCache", b =>
                 {
-                    b.HasOne("DictionaryApi.Models.UserCache.UserCache", null)
-                        .WithMany("Cache")
-                        .HasForeignKey("UserCacheId");
+                    b.HasOne("DictionaryApi.Models.UserCache.CachedWord", "Cache")
+                        .WithMany()
+                        .HasForeignKey("CacheId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Cache");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -482,11 +487,6 @@ namespace DictionaryApi.Migrations
             modelBuilder.Entity("DictionaryApi.Models.DTOs.Synonyms", b =>
                 {
                     b.Navigation("Synonym");
-                });
-
-            modelBuilder.Entity("DictionaryApi.Models.UserCache.UserCache", b =>
-                {
-                    b.Navigation("Cache");
                 });
 #pragma warning restore 612, 618
         }

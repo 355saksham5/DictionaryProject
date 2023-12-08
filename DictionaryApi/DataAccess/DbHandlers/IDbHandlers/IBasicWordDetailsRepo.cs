@@ -6,6 +6,7 @@ namespace DictionaryApi.DataAccess.DbHandlers.IDbHandlers
     public interface IBasicWordDetailsRepo
     {
         public Task<BasicWordDetails> GetDetails(string word);
+        public Task<BasicWordDetails> GetDetailsById(Guid wordId);
 
         public Task AddDetails(BasicWordDetails wordDetails);
 

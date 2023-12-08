@@ -17,7 +17,7 @@ namespace DictionaryApi.DataAccess.DbHandlers
         public async Task AddPronounciation(PhoneticDto phoneticDto)
         {
             await context.PhoneticAudios.AddAsync(phoneticDto);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
 
         public async Task DeletePronounciationById(Guid id)
@@ -28,10 +28,10 @@ namespace DictionaryApi.DataAccess.DbHandlers
                 return;
             }
             context.Remove(wordPronounciation);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
 
-        public async Task<PhoneticDto> GetPronounciationByWordId(Guid basicWordDetailsId)
+        public async Task<PhoneticDto?> GetPronounciationByWordId(Guid basicWordDetailsId)
         {
             return context.PhoneticAudios.FirstOrDefault(context => context.BasicWordDetailsId == basicWordDetailsId);
         }

@@ -1,5 +1,4 @@
-﻿using DictionaryApi.Migrations;
-using DictionaryApi.Models;
+﻿using DictionaryApi.Models;
 using DictionaryApp.Models;
 using DictionaryApp.ViewModels;
 using Microsoft.AspNetCore.Authorization;
@@ -39,7 +38,7 @@ namespace DictionaryApp.Controllers
 				var result = await dictionary.Register(user,model.Password);
 				if (result.Succeeded)
                 {
-                   return RedirectToAction("default", "home");
+                   return RedirectToAction("LogIn");
                 }
                 foreach (var error in result.Errors)
                 {
@@ -66,7 +65,7 @@ namespace DictionaryApp.Controllers
                 };
                 var result = await dictionary.LogIn(logInCred);
 
-                if (result!=null)
+                if (!String.IsNullOrEmpty( result))
                 {
                     HttpContext.Response.Cookies.Append("Authorization",result, new CookieOptions { HttpOnly = true });
                     return RedirectToAction("default", "home");
@@ -75,6 +74,12 @@ namespace DictionaryApp.Controllers
             }
             return View(model);
         }
+        [HttpPost]
+        public async Task<IActionResult> LogOut()
+        {
+            HttpContext.Response.Cookies.Delete("Authorization");
+            return RedirectToAction("LogIn");
+        }
 
-	}
+    }
 }

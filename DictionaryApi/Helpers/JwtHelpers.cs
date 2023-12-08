@@ -23,13 +23,7 @@ namespace DictionaryApi.Helpers
 				Expires = expireTime,
 				SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256)
 			};
-			var jwtToken = new JwtSecurityToken(
-					issuer: jwtConfiguration.Issuer,
-					audience: jwtConfiguration.Audience,
-					claims: claims,
-					expires: expireTime,
-					signingCredentials: new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256)
-					);
+			var jwtToken = tokenHandler.CreateToken(tokenDescriptor);
 			var jwt = new JwtSecurityTokenHandler().WriteToken(jwtToken);
 			return jwt;
 		}

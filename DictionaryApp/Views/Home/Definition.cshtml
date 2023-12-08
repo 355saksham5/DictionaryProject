@@ -14,7 +14,9 @@
         color: #007bff;
     }
 
-    form {
+    myform {
+        position: absolute;
+        z-index: 0;
         max-width: 400px;
         margin: 0 auto;
         background-color: #fff;
@@ -49,15 +51,15 @@
     <div class="col-md-12">
 
 
-        <form class=" mycard">
+        <myform class=" mycard">
             <h1>Meaning</h1>
-           <div>
-                <p>@Model.PartOfSpeech?.Name</p><br>
-               <p>Definition:@Model.DefinitionText</p><br>
-               <p>Example:@Model.Example</p><br>
+           <div class="ScrollStyle"> 
+                <p><b>@Model.PartOfSpeech?.Name</b></p><br>
+                <p><b>Definition:</b>@Model.DefinitionText</p><br>
+                <p><b>Example:</b>@Model.Example</p><br>
            </div>
 
-        </form>
+        </myform>
     </div>
 
     <div>

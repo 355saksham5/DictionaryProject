@@ -14,7 +14,7 @@ namespace DictionaryApp.Services
 		protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
 		{
 
-			var token = accessor.HttpContext.Request.Cookies["Authorization"];
+			var token = accessor?.HttpContext?.Request.Cookies["Authorization"];
 			request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
 			return await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
 		}

@@ -2,12 +2,14 @@
 using DictionaryApi.ExternalApiHandlers.IExternalApiHandlers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 
 namespace DictionaryApi.Controllers
 {
     [AllowAnonymous]
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
+    [ApiVersion("1.0")]
     public class SuggestionController : ControllerBase
     {
         private readonly ISuggestionService suggestion;
@@ -15,8 +17,8 @@ namespace DictionaryApi.Controllers
         {
             this.suggestion = suggestion;
         }
-        [HttpGet("{subString}")]
-        public async Task<IEnumerable<string>> Suggestions(string subString)
+        [HttpGet]
+        public async Task<IEnumerable<string>> Suggestions([Required]string subString)
         {
             var suggestions = await suggestion.GetSuggestions(subString);
             return suggestions;

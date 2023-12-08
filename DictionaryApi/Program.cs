@@ -7,7 +7,9 @@ using DictionaryApi.Extensions;
 using DictionaryApi.ExternalApiHandlers.IExternalApiHandlers;
 using DictionaryApi.Models;
 using DictionaryApi.Models.DTOs;
+using DictionaryApi.Models.UserCache;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Refit;
 using System.Text.Json;
@@ -24,13 +26,21 @@ var settings = new RefitSettings()
     ContentSerializer = new SystemTextJsonContentSerializer(options)
 };
 
+
 builder.Services.AddControllers();
+builder.Services.AddApiVersioning(x =>
+{
+	x.DefaultApiVersion = new ApiVersion(1, 0);
+	x.AssumeDefaultVersionWhenUnspecified = true;
+	x.ReportApiVersions = true;
+});
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContextPool<AppDbContext>(option => option.UseSqlServer(builder.Configuration.GetConnectionString("DictionaryDBConnection")));
 builder.Services.AddRefitClient<IMeaningApi>(settings).ConfigureHttpClient(c => c.BaseAddress = new Uri(builder.Configuration["BaseAddresses:MeaningApi"]));
 builder.Services.AddRefitClient<ISuggestionApi>(settings).ConfigureHttpClient(c => c.BaseAddress = new Uri(builder.Configuration["BaseAddresses:SuggestionApi"]));
 builder.Services.AddMvc();
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<AppDbContext>();
 builder.Services.AddScoped<IBasicWordDetailsRepo, BasicWordDetailRepo>();
 builder.Services.AddScoped<IWordDetailsService, WordDetailsService>();
@@ -41,9 +51,12 @@ builder.Services.AddScoped<ISynonymsRepo, SynonymsRepo>();
 builder.Services.AddScoped<BasicWordDetails>();
 builder.Services.AddScoped<UserIdentityResult>();
 builder.Services.AddScoped<ICache, Cache>();
+builder.Services.AddScoped<CachedWord>();
 builder.Services.AddScoped<IMeaningApiMapper, MeaningApiMapper>();
 builder.Services.AddScoped<ISuggestionService,SuggestionService>();
 builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
+builder.Services.AddScoped<IUserCacheService, UserCacheService>();
+builder.Services.AddScoped<IUserCacheRepo, UserCacheRepo>();
 builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection(JwtOptions.SectionName));
 builder.Services.AddJwtTokenServices(builder.Configuration);
 builder.Services.AddAuthorization();
@@ -58,9 +71,11 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+
 app.UseAuthentication();
 app.UseAuthorization();
-
 app.MapControllers();
+
+
 
 app.Run();

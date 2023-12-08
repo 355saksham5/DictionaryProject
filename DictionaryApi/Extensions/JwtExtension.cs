@@ -26,8 +26,8 @@ namespace DictionaryApi.Extensions
 						new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtConfig.IssuerSigningKey)),
 					ValidIssuer = jwtConfig.Issuer,
 					ValidAudience = jwtConfig.Audience,
-					ValidateIssuer = false, // change to true? error
-                    ValidateAudience = false,  // change to true? error
+					ValidateIssuer = true, // change to true? error
+                    ValidateAudience = true,  // change to true? error
 					ValidateIssuerSigningKey = true,
 					ValidateLifetime = true
 				};

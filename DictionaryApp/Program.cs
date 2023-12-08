@@ -1,5 +1,6 @@
 using Azure.Core;
 using DictionaryApi.Extensions;
+using DictionaryApp.Helpers;
 using DictionaryApp.Services;
 using Refit;
 using System.Linq;
@@ -36,10 +37,11 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+app.UseMiddleware<RedirectionMiddleware>();
 app.UseRouting();
 
 app.MapControllerRoute(
 	name: "default",
-	pattern: "{controller=Home}/{action=Default}/{id?}");
+	pattern: "{controller=Account}/{action=LogIn}");
 
 app.Run();

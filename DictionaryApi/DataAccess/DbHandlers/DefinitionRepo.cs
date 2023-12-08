@@ -16,8 +16,8 @@ namespace DictionaryApi.DataAccess.DbHandlers
 
         public async Task AddDefinition(DefinitionDto definition)
         {
-            context.Definitions.Add(definition);
-            context.SaveChanges();
+            await context.Definitions.AddAsync(definition);
+            await context.SaveChangesAsync();
         }
 
         public async Task DeleteDefinitionById(Guid id)
@@ -28,7 +28,7 @@ namespace DictionaryApi.DataAccess.DbHandlers
                 return;
             }
             context.Remove(wordDefinition);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<DefinitionDto>> GetAllDefinitionsByWordId(Guid basicWordDetailId)
@@ -37,7 +37,7 @@ namespace DictionaryApi.DataAccess.DbHandlers
             return definitions;
         }
 
-        public async Task<DefinitionDto> GetDefinitionByPosId(Guid partOfSpeechId)
+        public async Task<DefinitionDto?> GetDefinitionByPosId(Guid partOfSpeechId)
         {
             return context.Definitions.FirstOrDefault(context => context.Id == partOfSpeechId);
         }

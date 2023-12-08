@@ -24,7 +24,10 @@
 		</div>
 	</div>
 	<div class="typewriter">
-		<p>Definition:@Model.DefaultDefinition<br>Phonetic:@Model.DefaultPhoneticsText<br>Origin:@Model.Origin</p>
+		<p><b>Definition:</b>@Model.DefaultDefinition<br>
+			<b>Phonetic:</b>@Model.DefaultPhoneticsText<br>
+			<b>Origin:</b>@Model.Origin
+		</p>
 		<br>
 	</div>
 
@@ -35,10 +38,11 @@
 	</div>
 	<br><br>
 	<div class="d-flex gap-4 lexBar">
-		@for(int i=1;i<=Model.NumberOfDefinitions;i++)
-		{
-			<a class="btn btn-primary" asp-method="get" asp-action="Definition" asp-controller="Home" asp-route-index=i asp-route-itemid=@Model.Id>Definition @i.ToString()</a>
+		@for(int i=1,j=0;i<=Model.NumberOfDefinitions;i++,j++)
+		{			
+			<a class="btn btn-primary" asp-method="get" asp-action="Definition" asp-controller="Home" asp-route-index=@j asp-route-wordId=@Model.Id>Definition @i.ToString()</a>
 		}
 	</div>
 </div>
+
 

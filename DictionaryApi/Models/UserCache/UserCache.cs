@@ -10,6 +10,7 @@ namespace DictionaryApi.Models.UserCache
 		[ForeignKey("UserId")]
 		public Guid? UserId { get; set; }
 
-		public ConcurrentQueue<CachedWord>? Cache {  get; set; }
+		public DateTime SearchTime { get; set; }
+		public CachedWord Cache {  get; set; }
 	}
 }

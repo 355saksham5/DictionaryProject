@@ -36,7 +36,7 @@ namespace DictionaryApi.BusinessLayer.Services
 			var phonetics= wordDetails.Select(wordDetails=> wordDetails.Phonetics).SelectMany(Phonetic => Phonetic);
 			await MapPhoneticAudios(phonetics);
 			BasicWordDetails.DefaultDefinition = await MapDefinitions(meanings);
-			BasicWordDetailsRepo.AddDetails(BasicWordDetails);
+			await BasicWordDetailsRepo.AddDetails(BasicWordDetails);
 			return BasicWordDetails;
 		}
 
@@ -80,7 +80,7 @@ namespace DictionaryApi.BusinessLayer.Services
 			{
 				this.BasicWordDetails.IsPronounceLnkPresent= true;
 				var phoneticAudio = new PhoneticDto{ Id = Guid.NewGuid(), PronounceLink = pronounceLink, BasicWordDetailsId=this.BasicWordDetails.Id };
-				PhoneticAudiosRepo.AddPronounciation(phoneticAudio);
+				await PhoneticAudiosRepo.AddPronounciation(phoneticAudio);
 			}
 			return "";
 		}

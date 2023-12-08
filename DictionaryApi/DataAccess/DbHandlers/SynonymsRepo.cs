@@ -15,9 +15,10 @@ namespace DictionaryApi.DataAccess.DbHandlers
 		public async Task AddSynonyms(Synonyms synonym)
 		{
 			await context.Synonyms.AddAsync(synonym);
+			await context.SaveChangesAsync();
 		}
 
-		public async Task<IEnumerable<string>> GetSynonyms(Guid BasicWordDetailsId)
+		public async Task<IEnumerable<string?>> GetSynonyms(Guid BasicWordDetailsId)
 		{
 			var words = context.Synonyms.Where(synonym => synonym.BasicWordDetailsId == BasicWordDetailsId).Select(synonym => synonym.Synonym).SelectMany(word => word);
 			return words.Select(word => word.Word).ToList();

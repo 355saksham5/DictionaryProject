@@ -1,6 +1,8 @@
 ﻿using DictionaryApi.BusinessLayer.Services.IServices;
 using DictionaryApi.DataAccess.DbHandlers.IDbHandlers;
 using DictionaryApi.Models.DTOs;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Mvc;
 
 namespace DictionaryApi.BusinessLayer.Services
 {
@@ -12,8 +14,9 @@ namespace DictionaryApi.BusinessLayer.Services
         private readonly IAntonymsRepo antonymsRepo;
 		private readonly ISynonymsRepo synonymsRepo;
 		private readonly ICache appCache;
-        public WordDetailsService(IBasicWordDetailsRepo wordDetails,IDefinitionsRepo definition, IPhoneticAudiosRepo phoneticAudio, ICache appCache,
-            IAntonymsRepo antonyms, ISynonymsRepo synonyms)
+		private readonly IUserCacheService userCache;
+		public WordDetailsService(IBasicWordDetailsRepo wordDetails,IDefinitionsRepo definition, IPhoneticAudiosRepo phoneticAudio, ICache appCache,
+            IAntonymsRepo antonyms, ISynonymsRepo synonyms, IUserCacheService userCache)
         {
             this.wordDetails = wordDetails;
             this.definitions = definition;
@@ -21,6 +24,7 @@ namespace DictionaryApi.BusinessLayer.Services
             this.appCache = appCache;
             this.antonymsRepo = antonyms;
             this.synonymsRepo = synonyms;
+            this.userCache = userCache;
         }
 
         public async Task<IEnumerable<string>> GetAntonyms(Guid wordId)
@@ -31,8 +35,18 @@ namespace DictionaryApi.BusinessLayer.Services
 
         public async Task<BasicWordDetails> GetBasicDetails(string queryWord)
         {
-            var basicDetails =await appCache.HandleCache(queryWord);
+            var basicDetails = await appCache.HandleCache(queryWord);
+            if(basicDetails != null)
+            {
+                await userCache.SetCache(basicDetails.Id, basicDetails.Word); 
+            }
 			return basicDetails;
+        }
+
+        public async Task<BasicWordDetails> GetBasicDetailsById(Guid wordId)
+        {
+            var details = await wordDetails.GetDetailsById(wordId);
+            return details;
         }
 
         public async Task<DefinitionDto> GetDefinition(int index, Guid wordId)
