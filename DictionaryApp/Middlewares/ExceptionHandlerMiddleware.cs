@@ -1,6 +1,9 @@
 ﻿using DictionaryApi.Models;
+using DictionaryApp.Helpers;
+using Microsoft.AspNetCore.Mvc;
 using Refit;
 using System.Net;
+using System.Reflection.Metadata;
 using System.Text.Json;
 
 namespace DictionaryApp.Middlewares
@@ -29,8 +32,17 @@ namespace DictionaryApp.Middlewares
 				HttpStatusCode statusCode = (exception as ApiException)?.StatusCode ?? HttpStatusCode.InternalServerError;
 				if(statusCode == HttpStatusCode.NotFound)
 				{
-					context.Response.StatusCode = (int)HttpStatusCode.NotFound;
+					context.Response.Redirect(ConstantResources.wordNotExistPageUrl);
 				}
+				else if (statusCode == HttpStatusCode.InternalServerError)
+				{
+					context.Response.Redirect(ConstantResources.errorPageUrl);
+				}
+                else
+				{
+					context.Response.Redirect($"{ConstantResources.errorPageUrl}/{statusCode}");
+
+                }
 				
 			}
 		}

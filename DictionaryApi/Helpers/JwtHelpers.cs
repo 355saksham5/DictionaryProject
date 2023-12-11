@@ -13,8 +13,8 @@ namespace DictionaryApi.Helpers
 		{
 			var tokenHandler = new JwtSecurityTokenHandler();
 			var key = Encoding.UTF8.GetBytes(jwtConfiguration.IssuerSigningKey);
-			DateTime expireTime = DateTime.UtcNow.AddDays(1);
-            var claims = await GetClaimsAsync(jwtConfiguration,userId);
+			DateTime expireTime = DateTime.UtcNow.AddDays(ConstantResources.expiresInDays);
+            var claims = await GetClaimsAsync(userId);
             var tokenDescriptor = new SecurityTokenDescriptor
 			{
 				Issuer = jwtConfiguration.Issuer,
@@ -27,7 +27,7 @@ namespace DictionaryApi.Helpers
 			var jwt = new JwtSecurityTokenHandler().WriteToken(jwtToken);
 			return jwt;
 		}
-		private static async Task<IEnumerable<Claim>> GetClaimsAsync(JwtOptions jwtConfiguration,string userId)
+		private static async Task<IEnumerable<Claim>> GetClaimsAsync(string userId)
 		{
 			var claims = new List<Claim>()
 			{

@@ -21,6 +21,7 @@
         public const string userNotFoundErr = "User Not Found";
         public const string wrongCredErr = "Invalid Login Attempt";
 		public const string notFoundErr = "Sorry, the resource you requested could not be found";
-
+		public static readonly string errorPageUrl = "https://localhost:7060/Error";
+        public static readonly string wordNotExistPageUrl = "https://localhost:7060/Error/WordNotFound";
     }
 }

@@ -26,17 +26,10 @@ namespace DictionaryApp.Controllers
 		[HttpGet]
 		public async Task<IActionResult> Search(Word queryWord)
 		{
-			try
-			{
-                var wordDetails = await dictionary.GetWordDetails(queryWord.word);
-                return View(wordDetails);
-            }
-			catch (ApiException ex)
-			{
-				return View("WordNotFound");
-			}
-			
-		}
+            var wordDetails = await dictionary.GetWordDetails(queryWord.word);
+            return View(wordDetails);
+
+        }
         [HttpGet]
         public async Task<IActionResult> SearchById(Guid wordId)
         {

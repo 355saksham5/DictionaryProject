@@ -39,8 +39,8 @@ if (app.Environment.IsDevelopment())
 }
 else
 {
-	app.UseExceptionHandler(ConstantResources.exceptionPagePath);
-	app.UseStatusCodePagesWithReExecute(ConstantResources.errPagePath);
+	app.UseMiddleware<ExceptionHandlerMiddleware>();
+	app.UseStatusCodePagesWithReExecute($"{ConstantResources.errPagePath}"+"/{0}");
 }
 app.UseHttpsRedirection();
 app.UseStaticFiles();

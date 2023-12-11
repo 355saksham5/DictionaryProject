@@ -16,7 +16,13 @@ namespace DictionaryApp.Controllers
 			this.logger = logger;
 		}
 
-		[Route("[controller]/{statusCode}")]
+        [Route("[controller]/WordNotFound")]
+        public IActionResult WordNotFound(int statusCode)
+        {
+            return View(nameof(WordNotFound));
+        }
+
+        [Route("[controller]/{statusCode}")]
 		public IActionResult HttpStatusCodeHandler(int statusCode)
 		{
 			var statusCodeResult = HttpContext.Features.Get<IStatusCodeReExecuteFeature>();

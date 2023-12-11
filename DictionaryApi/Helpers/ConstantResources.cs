@@ -13,5 +13,6 @@
 		public static readonly string claimInJwt = "UserId";
 		public static readonly string userCacheNavProp = "Cache";
         public const string apiVersion = "1.0";
+        public static readonly double expiresInDays = 1;
     }
 }
