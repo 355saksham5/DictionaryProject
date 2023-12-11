@@ -40,7 +40,7 @@ namespace DictionaryApp.Middlewares
 				}
                 else
 				{
-					context.Response.Redirect($"{ConstantResources.errorPageUrl}/{statusCode}");
+					context.Response.Redirect($"{ConstantResources.errorPageUrl}/{(int)statusCode}");
 
                 }
 				
