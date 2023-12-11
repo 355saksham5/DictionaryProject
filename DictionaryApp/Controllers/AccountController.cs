@@ -1,6 +1,9 @@
 ﻿using DictionaryApi.Models;
+using DictionaryApp.Extension;
+using DictionaryApp.Helpers;
 using DictionaryApp.Models;
 using DictionaryApp.ViewModels;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -8,14 +11,13 @@ using System.Net;
 
 namespace DictionaryApp.Controllers
 {
+	[AutoValidateAntiforgeryToken]
 	public class AccountController : Controller
 	{
-		private readonly ILogger<HomeController> _logger;
 		private readonly IDictionaryApi dictionary;
 
-		public AccountController(ILogger<HomeController> logger, IDictionaryApi dictionary)
+		public AccountController( IDictionaryApi dictionary)
 		{
-			_logger = logger;
 			this.dictionary = dictionary;
 		}
 
@@ -38,7 +40,7 @@ namespace DictionaryApp.Controllers
 				var result = await dictionary.Register(user,model.Password);
 				if (result.Succeeded)
                 {
-                   return RedirectToAction("LogIn");
+                   return RedirectToAction(nameof(LogIn));
                 }
                 foreach (var error in result.Errors)
                 {
@@ -58,27 +60,30 @@ namespace DictionaryApp.Controllers
 		{
             if (ModelState.IsValid)
             {
-                var logInCred = new LoginModel
-                {
-                    Password = model.Password,
-                    Email = model.Email
-                };
+                var logInCred = new LoginModel { Password = model.Password , Email = model.Email };
                 var result = await dictionary.LogIn(logInCred);
-
-                if (!String.IsNullOrEmpty( result))
+                if (!String.IsNullOrEmpty(result.jwt))
                 {
-                    HttpContext.Response.Cookies.Append("Authorization",result, new CookieOptions { HttpOnly = true });
+                    await HttpContext.OnLogInAsync(result.jwt);
                     return RedirectToAction("default", "home");
                 }
-                ModelState.AddModelError(string.Empty, "Invalid Login Attempt");
+                if(result.PasswordFail)
+                {
+                    ModelState.AddModelError(string.Empty, ConstantResources.wrongCredErr);
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, ConstantResources.userNotFoundErr);
+                }
+                
             }
             return View(model);
         }
         [HttpPost]
         public async Task<IActionResult> LogOut()
         {
-            HttpContext.Response.Cookies.Delete("Authorization");
-            return RedirectToAction("LogIn");
+            await HttpContext.OnLogOutAsync();
+            return RedirectToAction(nameof(LogIn));
         }
 
     }

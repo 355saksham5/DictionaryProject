@@ -4,10 +4,10 @@ namespace DictionaryApi.BusinessLayer.Services.IServices
 {
     public interface IUserCacheService
     {
-        public Task<IEnumerable<CachedWord>> GetCache();
+        public Task<IEnumerable<CachedWord>> GetCacheAsync();
 
-        public Task SetCache(Guid wordId, string word);
+        public Task SetCacheAsync(Guid wordId, string word);
 
-        public Task ClearCache();
+        public Task ClearCacheAsync();
     }
 }

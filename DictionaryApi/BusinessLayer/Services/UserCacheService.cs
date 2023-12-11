@@ -1,6 +1,7 @@
 ﻿using DictionaryApi.BusinessLayer.Services.IServices;
 using DictionaryApi.DataAccess.DbHandlers.IDbHandlers;
 using DictionaryApi.ExternalApiHandlers.IExternalApiHandlers;
+using DictionaryApi.Helpers;
 using DictionaryApi.Models.UserCache;
 using Microsoft.AspNetCore.Identity;
 using System.Linq;
@@ -17,41 +18,41 @@ namespace DictionaryApi.BusinessLayer.Services
 			CachedWord cachedWord)
 		{
 			this.userCacheRepo = userCacheRepo;
-			userId = new Guid(contextAccessor.HttpContext.User.Claims.FirstOrDefault(c => c.Type == "UserId").Value);
+			userId = new Guid(contextAccessor.HttpContext.User.Claims.FirstOrDefault(c => c.Type == ConstantResources.claimInJwt)?.Value);
 			this.cachedWord = cachedWord;
 		}
 
-		public async Task ClearCache()
+		public async Task ClearCacheAsync()
 		{
-			await userCacheRepo.ClearUserCache(userId);
+			await userCacheRepo.ClearUserCacheAsync(userId);
 		}
 
-		public async Task<IEnumerable<CachedWord>> GetCache()
+		public async Task<IEnumerable<CachedWord>> GetCacheAsync()
 		{
-			var userCache = await userCacheRepo.GetCacheByUserId(userId);
+			var userCache = await userCacheRepo.GetCacheByUserIdAsync(userId);
 			var cachedWords = userCache.Select(userCache => userCache.Cache);
 			return cachedWords;
 		}
 
-		public async Task SetCache(Guid wordId, string word)
+		public async Task SetCacheAsync(Guid wordId, string word)
 		{
 			cachedWord.WordId = wordId;
 			cachedWord.Word = word;
 			cachedWord.Id=Guid.NewGuid();
 			var userCache = new UserCache { Id = Guid.NewGuid(), UserId = userId, SearchTime = DateTime.Now, Cache = cachedWord };
-			var isWordInHistory = await IsAlreadyCached(word);
+			var isWordInHistory = await IsAlreadyCachedAsync(word);
 			if(isWordInHistory)
 			{
 				return;
 			}
 			else
 			{
-                await userCacheRepo.AddWordToCache(userId, userCache);
+                await userCacheRepo.AddWordToCacheAsync(userId, userCache);
             }
 		}
-        public async Task<bool> IsAlreadyCached(String word)
+        public async Task<bool> IsAlreadyCachedAsync(String word)
         {
-			var userCache = await userCacheRepo.GetCacheByUserId(userId);
+			var userCache = await userCacheRepo.GetCacheByUserIdAsync(userId);
 			var cachedWords = userCache.Where(c => c.Cache.Word == word);
             if (cachedWords!=null && cachedWords.Count()!=0)
 			{

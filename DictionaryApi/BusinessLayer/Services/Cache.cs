@@ -17,13 +17,13 @@ namespace DictionaryApi.BusinessLayer.Services
             this.meaningApiMapper = meaningApiMapper;
 			this.meaningApi = meaningApi;
 		}
-        public async Task<BasicWordDetails> HandleCache(string queryWord)
+        public async Task<BasicWordDetails> HandleCacheAsync(string queryWord)
         {
-            var wordCached = await appCache.GetDetails(queryWord);
+            var wordCached = await appCache.GetDetailsAsync(queryWord);
             if (wordCached == null)
             {
-                var wordDetails = await meaningApi.GetWordDetails(queryWord);
-                wordCached=await meaningApiMapper.MapBasicWordDetails(wordDetails); 
+                var wordDetails = await meaningApi.GetWordDetailsAsync(queryWord);
+                wordCached=await meaningApiMapper.MapBasicWordDetailsAsync(wordDetails); 
             }
             return wordCached;
         }

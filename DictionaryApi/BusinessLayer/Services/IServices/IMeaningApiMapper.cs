@@ -5,9 +5,9 @@ namespace DictionaryApi.BusinessLayer.Services.IServices
 {
 	public interface IMeaningApiMapper
 	{
-		public Task<BasicWordDetails> MapBasicWordDetails(IEnumerable<WordDetails> wordDetails);
-		public Task<string> MapDefinitions(IEnumerable<Meaning> meanings);
-		public Task<string> MapPhoneticAudios(IEnumerable<Phonetic> phonetics);
+		public Task<BasicWordDetails> MapBasicWordDetailsAsync(IEnumerable<WordDetails> wordDetails);
+		public Task<string> MapDefinitionsAsync(IEnumerable<Meaning> meanings);
+		public Task<string> MapPhoneticAudiosAsync(IEnumerable<Phonetic> phonetics);
 
 	}
 }

@@ -4,8 +4,8 @@ namespace DictionaryApi.DataAccess.DbHandlers.IDbHandlers
 {
 	public interface IAntonymsRepo
 	{
-		public Task AddAntonyms(Antonyms antonyms);
+		public Task AddAntonymsAsync(Antonyms antonyms);
 
-		public Task<IEnumerable<string>> GetAntonyms(Guid BasicWordDetailsId);
+		public Task<IEnumerable<string>> GetAntonymsAsync(Guid BasicWordDetailsId);
 	}
 }

@@ -7,6 +7,6 @@ namespace DictionaryApi.ExternalApiHandlers.IExternalApiHandlers
     public interface IMeaningApi
     {
         [Get("/api/v2/entries/en/{queryWord}")]
-        Task<List<WordDetails>> GetWordDetails(string queryWord);
+        Task<List<WordDetails>> GetWordDetailsAsync(string queryWord);
     }
 }

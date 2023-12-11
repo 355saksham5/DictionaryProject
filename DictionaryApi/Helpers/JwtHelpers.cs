@@ -9,12 +9,12 @@ namespace DictionaryApi.Helpers
 {
     public static class JwtHelpers
 	{
-		public static string GenerateToken(JwtOptions jwtConfiguration, string userId)
+		public static async Task<string> GenerateTokenAsync(JwtOptions jwtConfiguration, string userId)
 		{
 			var tokenHandler = new JwtSecurityTokenHandler();
 			var key = Encoding.UTF8.GetBytes(jwtConfiguration.IssuerSigningKey);
-			DateTime expireTime = DateTime.UtcNow.AddMinutes(60);
-            var claims = GetClaims(jwtConfiguration,userId);
+			DateTime expireTime = DateTime.UtcNow.AddDays(1);
+            var claims = await GetClaimsAsync(jwtConfiguration,userId);
             var tokenDescriptor = new SecurityTokenDescriptor
 			{
 				Issuer = jwtConfiguration.Issuer,
@@ -27,12 +27,12 @@ namespace DictionaryApi.Helpers
 			var jwt = new JwtSecurityTokenHandler().WriteToken(jwtToken);
 			return jwt;
 		}
-		private static IEnumerable<Claim> GetClaims(JwtOptions jwtConfiguration,string userId)
+		private static async Task<IEnumerable<Claim>> GetClaimsAsync(JwtOptions jwtConfiguration,string userId)
 		{
 			var claims = new List<Claim>()
 			{
 				new(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString()),
-                new("UserId",userId)
+                new(ConstantResources.claimInJwt,userId)
 			};
 			return claims;
 		}

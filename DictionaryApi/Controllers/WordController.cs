@@ -1,69 +1,70 @@
 ﻿using DictionaryApi.BusinessLayer.Services.IServices;
+using DictionaryApi.Helpers;
 using DictionaryApi.Models.DTOs;
 using DictionaryApi.Models.UserCache;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
+using System.Reflection.Metadata;
 
 namespace DictionaryApi.Controllers
 {
     [Authorize]
     [ApiController]
     [Route("api/[controller]/[action]")]
-	[ApiVersion("1.0")]
+	[ApiVersion(ConstantResources.apiVersion)]
 	public class WordController : ControllerBase
     {
-        private readonly IWordDetailsService wordDetails;
+        private readonly IWordDetailsService wordDetailsService;
         public WordController(IWordDetailsService wordDetail)
         {
-            this.wordDetails = wordDetail;
+            this.wordDetailsService = wordDetail;
         }
 
 
         [HttpGet]
-        public async Task<BasicWordDetails> BasicDetails([Required] string queryWord)
+        public async Task<IActionResult> BasicDetails([Required] string queryWord)
         {
-            var basicDetails = await wordDetails.GetBasicDetails(queryWord);
-            return basicDetails;           
+            var basicDetails = await wordDetailsService.GetBasicDetailsAsync(queryWord);
+			return basicDetails == null ? NotFound() : Ok(basicDetails);        
         }
 
         [HttpGet]
-        public async Task<BasicWordDetails> BasicDetailsById([Required] Guid wordId)
+        public async Task<IActionResult> BasicDetailsById([Required] Guid wordId)
         {
-            var basicDetails = await wordDetails.GetBasicDetailsById(wordId);
-            return basicDetails;
-        }
+            var basicDetails = await wordDetailsService.GetBasicDetailsByIdAsync(wordId);
+			return basicDetails == null ? NotFound() : Ok(basicDetails);
+		}
+
+        [HttpGet]
+        public async Task<IActionResult> Antonyms([Required] Guid wordId)
+        {
+            var antonyms = await wordDetailsService.GetAntonymsAsync(wordId);
+			return antonyms == null ? NotFound() : Ok(antonyms);
+		}
 
         [HttpGet]
 
-        public async Task<IEnumerable<String>> Antonyms([Required] Guid wordId)
+        public async Task<IActionResult> Synonyms([Required] Guid wordId)
         {
-            var antonyms = await wordDetails.GetAntonyms(wordId);
-            return antonyms;
-        }
+            var synonyms = await wordDetailsService.GetSynonymsAsync(wordId);
+			return synonyms == null ? NotFound() : Ok(synonyms);
+		}
 
         [HttpGet]
 
-        public async Task<IEnumerable<String>> Synonyms([Required] Guid wordId)
+        public async Task<IActionResult> Pronounciation([Required] Guid wordId)
         {
-            var synonyms = await wordDetails.GetSynonyms(wordId);
-            return synonyms;
-        }
+            var pronounciation = await wordDetailsService.GetPronounciationAsync(wordId);
+			return pronounciation == null ? NotFound() : Ok(pronounciation);
+		}
 
         [HttpGet]
-
-        public async Task<String> Pronounciation([Required] Guid wordId)
+        public async Task<IActionResult> Definition([Required] int index , [Required] Guid wordId)
         {
-            var pronounciation = await wordDetails.GetPronounciation(wordId);
-            return pronounciation;
-        }
-
-        [HttpGet]
-        public async Task<DefinitionDto> Definition([Required] int index , [Required] Guid wordId)
-        {
-            var definition = await wordDetails.GetDefinition(index,wordId);
-            return definition;
-        }
+            var definition = await wordDetailsService.GetDefinitionAsync(index,wordId);
+			return definition == null ? NotFound() : Ok(definition);
+		}
 		
 	}
 }

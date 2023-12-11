@@ -27,31 +27,39 @@ namespace DictionaryApi.BusinessLayer.Services
             this.userCache = userCache;
         }
 
-        public async Task<IEnumerable<string>> GetAntonyms(Guid wordId)
+        public async Task<IEnumerable<string>?> GetAntonymsAsync(Guid wordId)
         {
-            var antonyms = await antonymsRepo.GetAntonyms(wordId);
+            if(!await ValidateWordIdAsync(wordId))
+            {
+                return null;
+            }
+            var antonyms = await antonymsRepo.GetAntonymsAsync(wordId);
             return antonyms;
         }
 
-        public async Task<BasicWordDetails> GetBasicDetails(string queryWord)
+        public async Task<BasicWordDetails?> GetBasicDetailsAsync(string queryWord)
         {
-            var basicDetails = await appCache.HandleCache(queryWord);
+            var basicDetails = await appCache.HandleCacheAsync(queryWord);
             if(basicDetails != null)
             {
-                await userCache.SetCache(basicDetails.Id, basicDetails.Word); 
+                await userCache.SetCacheAsync(basicDetails.Id, basicDetails.Word); 
             }
 			return basicDetails;
         }
 
-        public async Task<BasicWordDetails> GetBasicDetailsById(Guid wordId)
+        public async Task<BasicWordDetails?> GetBasicDetailsByIdAsync(Guid wordId)
         {
-            var details = await wordDetails.GetDetailsById(wordId);
+			var details = await wordDetails.GetDetailsByIdAsync(wordId);
             return details;
         }
 
-        public async Task<DefinitionDto> GetDefinition(int index, Guid wordId)
+        public async Task<DefinitionDto?> GetDefinitionAsync(int index, Guid wordId)
         {
-            var allDefinitions = await definitions.GetAllDefinitionsByWordId(wordId);
+			if (!await ValidateWordIdAsync(wordId))
+			{
+				return null;
+			}
+			var allDefinitions = await definitions.GetAllDefinitionsByWordIdAsync(wordId);
             if(index<allDefinitions.Count())
             {
 				var definition = allDefinitions.ToList()[index];
@@ -60,16 +68,38 @@ namespace DictionaryApi.BusinessLayer.Services
             return null;
         }
 
-        public async Task<string> GetPronounciation(Guid wordId)
+        public async Task<string?> GetPronounciationAsync(Guid wordId)
         {
-            var pronounciation = await phoneticAudio.GetPronounciationByWordId(wordId);
+			if (!await ValidateWordIdAsync(wordId))
+			{
+				return null;
+			}
+			var pronounciation = await phoneticAudio.GetPronounciationByWordIdAsync(wordId);
             return pronounciation?.PronounceLink;
         }
 
-        public async Task<IEnumerable<string>> GetSynonyms(Guid wordId)
+        public async Task<IEnumerable<string>?> GetSynonymsAsync(Guid wordId)
         {
-			var synonyms = await synonymsRepo.GetSynonyms(wordId);
+			if (!await ValidateWordIdAsync(wordId))
+			{
+				return null;
+			}
+			var synonyms = await synonymsRepo.GetSynonymsAsync(wordId);
 			return synonyms;
 		}
+
+        public async Task<bool> ValidateWordIdAsync(Guid wordId)
+        {
+            var details = await wordDetails.GetDetailsByIdAsync(wordId);
+            if(details != null)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+		}
+        
     }
 }

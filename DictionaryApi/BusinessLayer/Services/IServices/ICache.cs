@@ -2,8 +2,8 @@
 
 namespace DictionaryApi.BusinessLayer.Services.IServices
 {
-    public interface ICache 
+    public interface ICache
     {
-        public Task<BasicWordDetails> HandleCache(string queryWord);
+        public Task<BasicWordDetails> HandleCacheAsync(string queryWord);
     }
 }

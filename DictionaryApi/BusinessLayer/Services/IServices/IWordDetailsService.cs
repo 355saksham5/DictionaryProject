@@ -4,11 +4,11 @@ namespace DictionaryApi.BusinessLayer.Services.IServices
 {
     public interface IWordDetailsService
     {
-        public Task<BasicWordDetails> GetBasicDetails(string queryWord);
-        public Task<BasicWordDetails> GetBasicDetailsById(Guid wordId);
-        public Task<IEnumerable<String>> GetAntonyms(Guid wordId);
-        public Task<IEnumerable<String>> GetSynonyms(Guid wordId);
-        public Task<String> GetPronounciation(Guid wordId);
-        public Task<DefinitionDto> GetDefinition(int index, Guid wordId);
+        public Task<BasicWordDetails> GetBasicDetailsAsync(string queryWord);
+        public Task<BasicWordDetails> GetBasicDetailsByIdAsync(Guid wordId);
+        public Task<IEnumerable<String>> GetAntonymsAsync(Guid wordId);
+        public Task<IEnumerable<String>> GetSynonymsAsync(Guid wordId);
+        public Task<String> GetPronounciationAsync(Guid wordId);
+        public Task<DefinitionDto> GetDefinitionAsync(int index, Guid wordId);
     }
 }

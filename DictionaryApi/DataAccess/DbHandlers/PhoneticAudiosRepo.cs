@@ -14,13 +14,13 @@ namespace DictionaryApi.DataAccess.DbHandlers
             this.context = context;
         }
 
-        public async Task AddPronounciation(PhoneticDto phoneticDto)
+        public async Task AddPronounciationAsync(PhoneticDto phoneticDto)
         {
             await context.PhoneticAudios.AddAsync(phoneticDto);
             await context.SaveChangesAsync();
         }
 
-        public async Task DeletePronounciationById(Guid id)
+        public async Task DeletePronounciationByIdAsync(Guid id)
         {
             var wordPronounciation = context.PhoneticAudios.Where(context => context.Id == id);
             if (wordPronounciation == null)
@@ -31,14 +31,11 @@ namespace DictionaryApi.DataAccess.DbHandlers
             await context.SaveChangesAsync();
         }
 
-        public async Task<PhoneticDto?> GetPronounciationByWordId(Guid basicWordDetailsId)
+        public async Task<PhoneticDto?> GetPronounciationByWordIdAsync(Guid basicWordDetailsId)
         {
             return context.PhoneticAudios.FirstOrDefault(context => context.BasicWordDetailsId == basicWordDetailsId);
         }
 
-        public async Task<PhoneticDto> UpdatePronounciation(PhoneticDto phoneticDto)
-        {
-            throw new NotImplementedException();
-        }
+        
     }
 }

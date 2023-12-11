@@ -5,10 +5,10 @@ namespace DictionaryApi.DataAccess.DbHandlers.IDbHandlers
 {
     public interface IUserCacheRepo
     {
-        public Task<IEnumerable<UserCache>> GetCacheByUserId(Guid userId);
-        public Task AddWordToCache(Guid userId, UserCache cache);
+        public Task<IEnumerable<UserCache>> GetCacheByUserIdAsync(Guid userId);
+        public Task AddWordToCacheAsync(Guid userId, UserCache cache);
 
-        public Task ClearUserCache(Guid userId);
+        public Task ClearUserCacheAsync(Guid userId);
 
     }
 }

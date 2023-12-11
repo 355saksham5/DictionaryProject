@@ -2,14 +2,13 @@
 
 namespace DictionaryApp.Controllers
 {
+	[AutoValidateAntiforgeryToken]
+
     public class HistoryController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
         private readonly IDictionaryApi dictionary;
-
-        public HistoryController(ILogger<HomeController> logger, IDictionaryApi dictionary)
+		public HistoryController(IDictionaryApi dictionary)
         {
-            _logger = logger;
             this.dictionary = dictionary;
         }
 
@@ -23,7 +22,7 @@ namespace DictionaryApp.Controllers
         public async Task<IActionResult> ClearCache()
         {
             await dictionary.ClearHistory();
-            return RedirectToAction("PastSearches");
+            return RedirectToAction(nameof(PastSearches));
         }
     }
 }

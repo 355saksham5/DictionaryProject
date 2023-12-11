@@ -12,10 +12,10 @@ namespace DictionaryApi.BusinessLayer.Services
         {
             this.options = options.Value;
         }
-        public async Task<string> CreateToken(string id) 
+        public async Task<string> CreateTokenAsync(string id) 
         {
             var userId = id;
-            var token = JwtHelpers.GenerateToken(options, userId); //await
+            var token = await JwtHelpers.GenerateTokenAsync(options, userId);
             return token;
         }
 

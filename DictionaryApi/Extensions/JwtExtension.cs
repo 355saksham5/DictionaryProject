@@ -19,26 +19,17 @@ namespace DictionaryApi.Extensions
 				options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
 			}).AddJwtBearer(options =>
 			{
-				//options.SaveToken = true;
 				options.TokenValidationParameters = new TokenValidationParameters()
 				{
 					IssuerSigningKey =
 						new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtConfig.IssuerSigningKey)),
 					ValidIssuer = jwtConfig.Issuer,
 					ValidAudience = jwtConfig.Audience,
-					ValidateIssuer = true, // change to true? error
-                    ValidateAudience = true,  // change to true? error
+					ValidateIssuer = true,
+                    ValidateAudience = true,
 					ValidateIssuerSigningKey = true,
 					ValidateLifetime = true
 				};
-				//options.Events = new JwtBearerEvents
-				//{
-				//	OnMessageReceived = context =>
-				//	{
-				//		context.Token = context.Request.Cookies["Authorization"];
-				//		return Task.CompletedTask;
-				//	}
-				//};
 			});
 		}
 	}

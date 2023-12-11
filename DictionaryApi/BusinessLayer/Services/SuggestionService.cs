@@ -12,9 +12,9 @@ namespace DictionaryApi.BusinessLayer.Services
 		{
 			this.suggestionApi = suggestion;
 		}
-		public async Task<IEnumerable<string?>> GetSuggestions(string queryWord)
+		public async Task<IEnumerable<string?>> GetSuggestionsAsync(string queryWord)
 		{
-			var suggestions = await suggestionApi.GetSuggestions(queryWord);
+			var suggestions = await suggestionApi.GetSuggestionsAsync(queryWord);
 			return suggestions.Select(suggestion => suggestion.Word).Take(numberOfSuggestions);
 
 

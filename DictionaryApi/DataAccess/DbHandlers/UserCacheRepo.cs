@@ -18,16 +18,16 @@ namespace DictionaryApi.DataAccess.DbHandlers
 		{
 			this.context = context;
 		}
-		public async Task AddWordToCache(Guid userId, UserCache cache)
+		public async Task AddWordToCacheAsync(Guid userId, UserCache cache)
 		{
-			await RemoveElementOnExceed(userId);
+			await RemoveElementOnExceedAsync(userId);
 			await context.UserCache.AddAsync(cache);
 			await context.SaveChangesAsync();
 		}
 
-		public async Task ClearUserCache(Guid userId)
+		public async Task ClearUserCacheAsync(Guid userId)
 		{
-			var cache = await GetCacheByUserId(userId);
+			var cache = await GetCacheByUserIdAsync(userId);
 			foreach(var  cacheItem in cache)
 			{
 				if(cacheItem != null)
@@ -38,15 +38,15 @@ namespace DictionaryApi.DataAccess.DbHandlers
 			await context.SaveChangesAsync();
 		}
 
-		public async Task<IEnumerable<UserCache?>> GetCacheByUserId(Guid userId)
+		public async Task<IEnumerable<UserCache?>> GetCacheByUserIdAsync(Guid userId)
 		{
-			var userCache = context.UserCache.Include("Cache").Where(user => user.UserId == userId);
+			var userCache = context.UserCache.Include(ConstantResources.userCacheNavProp).Where(user => user.UserId == userId);
 			return userCache;
 		}
 
-		public async Task RemoveElementOnExceed(Guid userId)
+		public async Task RemoveElementOnExceedAsync(Guid userId)
 		{
-			var cache = await GetCacheByUserId(userId);
+			var cache = await GetCacheByUserIdAsync(userId);
 			while (cache.Count()>=limit)
 			{
 				var oldestEntry=cache.OrderBy(x => x?.SearchTime).FirstOrDefault();

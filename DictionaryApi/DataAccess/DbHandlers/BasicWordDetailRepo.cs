@@ -15,32 +15,27 @@ namespace DictionaryApi.DataAccess.DbHandlers
             this.context = context;
         }
 
-        public async Task AddDetails(BasicWordDetails wordDetail)
+        public async Task AddDetailsAsync(BasicWordDetails wordDetail)
 		{
 			await context.AddAsync(wordDetail);
             await context.SaveChangesAsync();
         }
 
-        public async Task DeleteDetailsById(Guid id)
+        public async Task DeleteDetailsByIdAsync(Guid id)
         {
            context.Remove(context.BasicWordDetails.Where(word=>word.Id==id));
 			await context.SaveChangesAsync();
 		}
 
-        public async Task<BasicWordDetails?> GetDetails(string word)
+        public async Task<BasicWordDetails?> GetDetailsAsync(string word)
         {
             return context.BasicWordDetails.FirstOrDefault(context => context.Word == word);
         }
 
-        public async Task<BasicWordDetails?> GetDetailsById(Guid wordId)
+        public async Task<BasicWordDetails?> GetDetailsByIdAsync(Guid wordId)
         {
             var wordDetails = await context.BasicWordDetails.FindAsync(wordId);
             return wordDetails;
-        }
-
-        public async Task<BasicWordDetails> UpdateDetails(BasicWordDetails wordDetails)
-        {
-            throw new NotImplementedException();
         }
     }
 }

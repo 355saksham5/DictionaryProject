@@ -26,7 +26,7 @@ public interface IDictionaryApi
 
 	#region  User
 	[Post("/api/User/Login")]
-    Task<string> LogIn(LoginModel model);
+    Task<LogInResult> LogIn(LoginModel model);
     [Post("/api/User/Register")]
     Task<UserIdentityResult> Register(IdentityUser user, string password);
 	#endregion

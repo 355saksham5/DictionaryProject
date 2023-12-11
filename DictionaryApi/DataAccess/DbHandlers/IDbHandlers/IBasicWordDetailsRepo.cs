@@ -5,15 +5,12 @@ namespace DictionaryApi.DataAccess.DbHandlers.IDbHandlers
 {
     public interface IBasicWordDetailsRepo
     {
-        public Task<BasicWordDetails> GetDetails(string word);
-        public Task<BasicWordDetails> GetDetailsById(Guid wordId);
+        public Task<BasicWordDetails> GetDetailsAsync(string word);
+        public Task<BasicWordDetails> GetDetailsByIdAsync(Guid wordId);
 
-        public Task AddDetails(BasicWordDetails wordDetails);
+        public Task AddDetailsAsync(BasicWordDetails wordDetails);
 
-        public Task DeleteDetailsById(Guid id);
-
-        public Task<BasicWordDetails> UpdateDetails(BasicWordDetails wordDetails);
-
+        public Task DeleteDetailsByIdAsync(Guid id);
 
 	}
 }

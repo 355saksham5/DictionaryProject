@@ -6,6 +6,6 @@ namespace DictionaryApi.ExternalApiHandlers.IExternalApiHandlers
     public interface ISuggestionApi
     {
         [Get("/sug?s={querySubWord}")]
-        Task<List<Suggestion>> GetSuggestions(string querySubWord);
+        Task<List<Suggestion>> GetSuggestionsAsync(string querySubWord);
     }
 }

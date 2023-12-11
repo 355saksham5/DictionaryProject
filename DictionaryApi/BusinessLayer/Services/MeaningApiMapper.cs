@@ -27,29 +27,33 @@ namespace DictionaryApi.BusinessLayer.Services
 			this.AntonymsRepo= AntonymsRepo;
 		}
 
-		public async Task<BasicWordDetails> MapBasicWordDetails(IEnumerable<WordDetails> wordDetails)
+		public async Task<BasicWordDetails?> MapBasicWordDetailsAsync(IEnumerable<WordDetails> wordDetails)
 		{
             BasicWordDetails.Id= Guid.NewGuid();
 			BasicWordDetails.Word = wordDetails.FirstOrDefault()?.Word;
 			BasicWordDetails.Origin = wordDetails.FirstOrDefault(wordDetail => wordDetail.Origin!=null && wordDetail.Origin!="")?.Origin;
 			var meanings = wordDetails.Select(wordDetails => wordDetails.Meanings).SelectMany(Meaning => Meaning);
 			var phonetics= wordDetails.Select(wordDetails=> wordDetails.Phonetics).SelectMany(Phonetic => Phonetic);
-			await MapPhoneticAudios(phonetics);
-			BasicWordDetails.DefaultDefinition = await MapDefinitions(meanings);
-			await BasicWordDetailsRepo.AddDetails(BasicWordDetails);
+			await MapPhoneticAudiosAsync(phonetics);
+			BasicWordDetails.DefaultDefinition = await MapDefinitionsAsync(meanings);
+			await BasicWordDetailsRepo?.AddDetailsAsync(BasicWordDetails);
 			return BasicWordDetails;
 		}
 
-		public async Task<string> MapDefinitions(IEnumerable<Meaning> meanings)
+		public async Task<string?> MapDefinitionsAsync(IEnumerable<Meaning> meanings)
 		{
-			var synonyms = meanings.Select(meaning => meaning.Synonyms).SelectMany(synonyms => synonyms).Select(word => new Words {Id = Guid.NewGuid(), Word=word}).ToList();
-			var antonyms = meanings.Select(meaning => meaning.Antonyms).SelectMany(antonyms => antonyms).Select(word => new Words { Id = Guid.NewGuid(), Word = word }).ToList();
-			var synonymMore = meanings.Select(meaning => meaning.Definitions.Select(definition => definition.Synonyms)).SelectMany(synonyms => synonyms).SelectMany(synonyms => synonyms).Select(word => new Words { Id = Guid.NewGuid(), Word = word });
-			var antonymMore = meanings.Select(meaning => meaning.Definitions.Select(definition => definition.Antonyms)).SelectMany(antonyms => antonyms).SelectMany(antonyms=>antonyms).Select(word => new Words { Id = Guid.NewGuid(), Word = word });
+			var synonyms = meanings.Select(meaning => meaning.Synonyms).SelectMany(synonyms => synonyms)
+				.Select(word => new Words {Id = Guid.NewGuid(), Word=word}).ToList();
+			var antonyms = meanings.Select(meaning => meaning.Antonyms).SelectMany(antonyms => antonyms)
+				.Select(word => new Words { Id = Guid.NewGuid(), Word = word }).ToList();
+			var synonymMore = meanings.Select(meaning => meaning?.Definitions?.Select(definition => definition.Synonyms))
+				.SelectMany(synonyms => synonyms).SelectMany(synonyms => synonyms).Select(word => new Words { Id = Guid.NewGuid(), Word = word });
+			var antonymMore = meanings.Select(meaning => meaning?.Definitions?.Select(definition => definition.Antonyms))
+				.SelectMany(antonyms => antonyms).SelectMany(antonyms=>antonyms).Select(word => new Words { Id = Guid.NewGuid(), Word = word });
 			synonyms.Union(synonymMore).OrderBy(x => x.Id).ToList();
 			antonyms.Union(antonymMore).OrderBy(x => x.Id).ToList();
-			await AntonymsRepo.AddAntonyms(new Antonyms { Id = Guid.NewGuid(), Antonym = antonyms, BasicWordDetailsId = this.BasicWordDetails.Id });
-			await SynonymsRepo.AddSynonyms(new Synonyms { Id = Guid.NewGuid(), Synonym = synonyms, BasicWordDetailsId = this.BasicWordDetails.Id });
+			await AntonymsRepo.AddAntonymsAsync(new Antonyms { Id = Guid.NewGuid(), Antonym = antonyms, BasicWordDetailsId = this.BasicWordDetails.Id });
+			await SynonymsRepo.AddSynonymsAsync(new Synonyms { Id = Guid.NewGuid(), Synonym = synonyms, BasicWordDetailsId = this.BasicWordDetails.Id });
 
 			var partOfSpeeches = meanings.Select(meaning => meaning.PartOfSpeech).Select(partOfSpeech=>new PartOfSpeech
 			{
@@ -67,12 +71,12 @@ namespace DictionaryApi.BusinessLayer.Services
 			this.BasicWordDetails.NumberOfDefinitions = definitions.Count();
 			foreach (var  definition in definitions)
 			{
-				DefinitionsRepo?.AddDefinition(definition);
+				await DefinitionsRepo?.AddDefinitionAsync(definition);
 			}
 			return definitions.FirstOrDefault(Definition => Definition.DefinitionText != null && Definition.DefinitionText != "")?.DefinitionText;
 		}
 
-		public async Task<string> MapPhoneticAudios(IEnumerable<Phonetic> phonetics)
+		public async Task<string?> MapPhoneticAudiosAsync(IEnumerable<Phonetic> phonetics)
 		{
 			BasicWordDetails.DefaultPhoneticsText = phonetics.FirstOrDefault(phonetic => phonetic.PhoneticText != null && phonetic.PhoneticText != "")?.PhoneticText;
 			var pronounceLink = phonetics.FirstOrDefault(phonetic => phonetic.PronounceLink != null && phonetic.PronounceLink != "")?.PronounceLink;
@@ -80,7 +84,7 @@ namespace DictionaryApi.BusinessLayer.Services
 			{
 				this.BasicWordDetails.IsPronounceLnkPresent= true;
 				var phoneticAudio = new PhoneticDto{ Id = Guid.NewGuid(), PronounceLink = pronounceLink, BasicWordDetailsId=this.BasicWordDetails.Id };
-				await PhoneticAudiosRepo.AddPronounciation(phoneticAudio);
+				await PhoneticAudiosRepo.AddPronounciationAsync(phoneticAudio);
 			}
 			return "";
 		}

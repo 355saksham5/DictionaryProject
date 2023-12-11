@@ -2,6 +2,6 @@
 {
     public interface ISuggestionService
     {
-		public Task<IEnumerable<string?>> GetSuggestions(string queryWord);
+		public Task<IEnumerable<string?>> GetSuggestionsAsync(string queryWord);
 	}
 }

@@ -12,13 +12,13 @@ namespace DictionaryApi.DataAccess.DbHandlers
 		{
 			this.context = context;
 		}
-		public async Task AddSynonyms(Synonyms synonym)
+		public async Task AddSynonymsAsync(Synonyms synonym)
 		{
 			await context.Synonyms.AddAsync(synonym);
 			await context.SaveChangesAsync();
 		}
 
-		public async Task<IEnumerable<string?>> GetSynonyms(Guid BasicWordDetailsId)
+		public async Task<IEnumerable<string?>> GetSynonymsAsync(Guid BasicWordDetailsId)
 		{
 			var words = context.Synonyms.Where(synonym => synonym.BasicWordDetailsId == BasicWordDetailsId).Select(synonym => synonym.Synonym).SelectMany(word => word);
 			return words.Select(word => word.Word).ToList();

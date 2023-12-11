@@ -14,13 +14,13 @@ namespace DictionaryApi.DataAccess.DbHandlers
             this.context = context;
         }
 
-        public async Task AddDefinition(DefinitionDto definition)
+        public async Task AddDefinitionAsync(DefinitionDto definition)
         {
             await context.Definitions.AddAsync(definition);
             await context.SaveChangesAsync();
         }
 
-        public async Task DeleteDefinitionById(Guid id)
+        public async Task DeleteDefinitionByIdAsync(Guid id)
         {
             var wordDefinition = context.Definitions.Where(context => context.Id == id);
             if (wordDefinition == null)
@@ -31,20 +31,16 @@ namespace DictionaryApi.DataAccess.DbHandlers
             await context.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<DefinitionDto>> GetAllDefinitionsByWordId(Guid basicWordDetailId)
+        public async Task<IEnumerable<DefinitionDto>> GetAllDefinitionsByWordIdAsync(Guid basicWordDetailId)
         {
             var definitions = context.Definitions.Where(context => context.BasicWordDetailsId == basicWordDetailId);
             return definitions;
         }
 
-        public async Task<DefinitionDto?> GetDefinitionByPosId(Guid partOfSpeechId)
+        public async Task<DefinitionDto?> GetDefinitionByPosIdAsync(Guid partOfSpeechId)
         {
             return context.Definitions.FirstOrDefault(context => context.Id == partOfSpeechId);
         }
 
-        public async Task<DefinitionDto> UpdateDefinition(DefinitionDto definition)
-        {
-            throw new NotImplementedException();
-        }
     }
 }
