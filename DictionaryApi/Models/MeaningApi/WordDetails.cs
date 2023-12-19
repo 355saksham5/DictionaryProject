@@ -15,5 +15,6 @@ namespace DictionaryApi.Models.MeaningApi
         public string? Origin { get; set; }
         [JsonPropertyName("meanings")]
         public List<Meaning>? Meanings { get; set; }
+
     }
 }

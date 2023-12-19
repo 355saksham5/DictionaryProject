@@ -10,6 +10,9 @@ using DictionaryApi.Middlewares;
 using DictionaryApi.Models;
 using DictionaryApi.Models.DTOs;
 using DictionaryApi.Models.UserCache;
+using Hangfire;
+using Hangfire.Common;
+using Hangfire.MemoryStorage;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -17,17 +20,6 @@ using Refit;
 using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
-var options = new JsonSerializerOptions()
-{
-    PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-    WriteIndented = true,
-};
-
-var settings = new RefitSettings()
-{
-    ContentSerializer = new SystemTextJsonContentSerializer(options)
-};
-
 
 builder.Services.AddControllers();
 builder.Services.AddApiVersioning(x =>
@@ -39,41 +31,52 @@ builder.Services.AddApiVersioning(x =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContextPool<AppDbContext>(option => option.UseSqlServer(builder.Configuration.GetConnectionString(ConstantResources.getConnectionString)));
-builder.Services.AddRefitClient<IMeaningApi>(settings).ConfigureHttpClient(c => c.BaseAddress = new Uri(builder.Configuration[ConstantResources.getBaseAddressMeaningApi]));
-builder.Services.AddRefitClient<ISuggestionApi>(settings).ConfigureHttpClient(c => c.BaseAddress = new Uri(builder.Configuration[ConstantResources.getBaseAddressSuggestionApi]));
-builder.Services.AddMvc();
+builder.Services.AddRefitClient<IMeaningApi>().ConfigureHttpClient(c => c.BaseAddress = new Uri(builder.Configuration[ConstantResources.getBaseAddressMeaningApi]));
+builder.Services.AddRefitClient<ISuggestionApi>().ConfigureHttpClient(c => c.BaseAddress = new Uri(builder.Configuration[ConstantResources.getBaseAddressSuggestionApi]));
+builder.Services.AddHangfire(option => option.UseMemoryStorage());
+builder.Services.AddHangfireServer();
+
 builder.Services.AddHttpContextAccessor();
-builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<AppDbContext>();
+builder.Services.AddIdentity<IdentityUser, IdentityRole>(option => { option.User.RequireUniqueEmail = true; }).AddEntityFrameworkStores<AppDbContext>();
+builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection(JwtOptions.SectionName));
+builder.Services.AddJwtTokenServices(builder.Configuration);
+
+
 builder.Services.AddScoped<IBasicWordDetailsRepo, BasicWordDetailRepo>();
-builder.Services.AddScoped<IWordDetailsService, WordDetailsService>();
 builder.Services.AddScoped<IPhoneticAudiosRepo, PhoneticAudiosRepo>();
 builder.Services.AddScoped<IDefinitionsRepo, DefinitionRepo>();
 builder.Services.AddScoped<IAntonymsRepo, AntonymsRepo>();
 builder.Services.AddScoped<ISynonymsRepo, SynonymsRepo>();
+builder.Services.AddScoped<IUserCacheRepo, UserCacheRepo>();
+
 builder.Services.AddScoped<BasicWordDetails>();
 builder.Services.AddScoped<UserIdentityResult>();
 builder.Services.AddScoped<LogInResult>();
-builder.Services.AddScoped<ICache, Cache>();
 builder.Services.AddScoped<CachedWord>();
+
+builder.Services.AddScoped<ICache, Cache>();
+builder.Services.AddScoped<IWordDetailsService, WordDetailsService>();
 builder.Services.AddScoped<IMeaningApiMapper, MeaningApiMapper>();
-builder.Services.AddScoped<ISuggestionService,SuggestionService>();
+builder.Services.AddScoped<ISuggestionService, SuggestionService>();
 builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
 builder.Services.AddScoped<IUserCacheService, UserCacheService>();
-builder.Services.AddScoped<IUserCacheRepo, UserCacheRepo>();
-builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection(JwtOptions.SectionName));
-builder.Services.AddJwtTokenServices(builder.Configuration);
-builder.Services.AddAuthorization();
 
 var app = builder.Build();
-
 app.UseSwagger();
 app.UseSwaggerUI();
+app.Use(async (context, next) =>
+{
+	if(ConstantResources.flag==0)
+	{
+        RecurringJob.AddOrUpdate("clearCache", (ICache cache) => cache.DeleteFromCache(), Cron.Daily);
+		ConstantResources.flag = 1;
+    }
+    await next();
+});
 app.UseMiddleware<ExceptionHandlerMiddleware>();
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
-
-
 
 app.Run();

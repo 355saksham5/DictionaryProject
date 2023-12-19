@@ -28,7 +28,8 @@ namespace DictionaryApi.Middlewares
 			catch (Exception exception)
 			{
 				ErrorModel response;
-				HttpStatusCode statusCode = (exception as ApiException)?.StatusCode??HttpStatusCode.InternalServerError;
+				HttpStatusCode statusCode = (exception as ApiException)?.StatusCode ?? (exception as AnyHttpException)?.statusCode
+					                                ?? HttpStatusCode.InternalServerError;
 			    var exceptionType = exception.GetType();
 				if(env.IsDevelopment())
 				{

@@ -17,6 +17,8 @@
 	<div class="col-md-3">
 		<div class="wordH d-flex gap-4">
 			<h1>@Model.Word</h1>
+			<div asp-validation-summary="All" class="text-danger"></div>
+
 			@if (Model.IsPronounceLnkPresent == true)
 			{
 				<a class="speaker" asp-method="get" asp-action="Pronounciation" asp-controller="Home" asp-route-wordId=@Model.Id> <i class='fas fa-volume-up '></i></a>

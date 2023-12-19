@@ -11,6 +11,8 @@ namespace DictionaryApi.DataAccess.DbHandlers.IDbHandlers
         public Task AddDetailsAsync(BasicWordDetails wordDetails);
 
         public Task DeleteDetailsByIdAsync(Guid id);
+        public List<Guid> GetLeastRecentlyUsed();
 
-	}
+
+    }
 }

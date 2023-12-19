@@ -11,6 +11,7 @@ namespace DictionaryApi.Models.DTOs
         public string? Origin { get; set; } = null;
         public bool IsPronounceLnkPresent { get; set; } = false;
         public int NumberOfDefinitions { get; set; }
+        public DateTime SearchedTime { get; set; } = DateTime.Now;
 
     }
 }

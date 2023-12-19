@@ -26,29 +26,24 @@ namespace DictionaryApp.Controllers
 		public IActionResult HttpStatusCodeHandler(int statusCode)
 		{
 			var statusCodeResult = HttpContext.Features.Get<IStatusCodeReExecuteFeature>();
-
-			switch (statusCode)
+            logger.LogWarning($"{statusCode} Error Occured. Path = {statusCodeResult?.OriginalPath}" +
+                            $" and QueryString = {statusCodeResult?.OriginalQueryString}");
+            switch (statusCode)
 			{
                 case 404:
                     {
                         ViewBag.ErrorMessage = ConstantResources.notFoundErr;
-                        logger.LogWarning($"{statusCode} Error Occured. Path = {statusCodeResult?.OriginalPath}" +
-                            $" and QueryString = {statusCodeResult?.OriginalQueryString}");
                         return View("NotFound");
                     }
 
                 case 401:
                     {
-                        logger.LogWarning($"{statusCode} Error Occured. Path = {statusCodeResult?.OriginalPath}" +
-                        $" and QueryString = {statusCodeResult?.OriginalQueryString}");
-                        return RedirectToAction("Login", "Account");
+                       return RedirectToAction("Login", "Account");
                     }
 
                 default:
                     {
                         ViewBag.ErrorTitle = $"{statusCode} Error Occured.";
-                        logger.LogWarning($"{statusCode} Error Occured. Path = {statusCodeResult?.OriginalPath}" +
-                            $" and QueryString = {statusCodeResult?.OriginalQueryString}");
                         return View("Error");
                     }
             }

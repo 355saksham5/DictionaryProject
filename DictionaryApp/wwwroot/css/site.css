@@ -370,7 +370,7 @@ body {
 }
 
 .ScrollStyle {
-    max-height: 150px;
+    max-height: 340px;
     overflow-y: scroll;
 }
 

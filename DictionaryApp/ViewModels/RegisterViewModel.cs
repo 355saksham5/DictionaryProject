@@ -11,12 +11,14 @@ namespace DictionaryApp.ViewModels
 		[EmailAddress]
 		public string? Email { get; set; }
 
-		[Required]
-		[DataType(DataType.Password)]
+
+        [Required(ErrorMessage = nameof(Password)+ConstantResources.errMssgRequired)]
+        [DataType(DataType.Password)]
 		public string? Password { get; set; }
 
-		[DataType(DataType.Password)]
-		[Display(Name = "Confirm password")]
+        [Required(ErrorMessage = nameof(ConfirmPassword) + ConstantResources.errMssgRequired)]
+        [DataType(DataType.Password)]
+        [Display(Name = "Confirm password")]
 		[Compare(nameof(Password),
 			ErrorMessage = ConstantResources.passwordMismatchErr)]
 		public string? ConfirmPassword { get; set; }

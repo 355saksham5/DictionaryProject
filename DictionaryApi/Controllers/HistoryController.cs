@@ -10,8 +10,8 @@ using System.Security.Claims;
 
 namespace DictionaryApi.Controllers
 {
-	[Authorize]
-	[ApiController]
+    [Authorize(AuthenticationSchemes = "Bearer")]
+    [ApiController]
 	[Route("api/[controller]")]
 	[ApiVersion(ConstantResources.apiVersion)]
 	public class HistoryController : ControllerBase

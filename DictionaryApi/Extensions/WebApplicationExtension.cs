@@ -5,7 +5,7 @@ using System.Text;
 
 namespace DictionaryApi.Extensions
 {
-    public static class JwtExtensions
+    public static class WebApplicationExtensions
 	{
 		public static void AddJwtTokenServices(this IServiceCollection services, IConfiguration configuration)
 		{

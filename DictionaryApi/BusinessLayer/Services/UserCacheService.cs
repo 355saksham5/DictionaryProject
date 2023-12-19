@@ -18,7 +18,7 @@ namespace DictionaryApi.BusinessLayer.Services
 			CachedWord cachedWord)
 		{
 			this.userCacheRepo = userCacheRepo;
-			userId = new Guid(contextAccessor.HttpContext.User.Claims.FirstOrDefault(c => c.Type == ConstantResources.claimInJwt)?.Value);
+			userId = new Guid(contextAccessor.HttpContext.User.Claims.FirstOrDefault(c => c.Type.Equals(ConstantResources.claimInJwt))?.Value);
 			this.cachedWord = cachedWord;
 		}
 

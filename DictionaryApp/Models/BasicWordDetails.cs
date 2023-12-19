@@ -1,6 +1,6 @@
 ﻿namespace DictionaryApp.Models
 {
-	public class BasicWordDetails
+	public class BasicWordDetails 
 	{
 		public Guid Id { get; set; }
 		public string? Word { get; set; } = null;

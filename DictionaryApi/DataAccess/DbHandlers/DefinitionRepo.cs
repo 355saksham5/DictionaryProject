@@ -22,7 +22,7 @@ namespace DictionaryApi.DataAccess.DbHandlers
 
         public async Task DeleteDefinitionByIdAsync(Guid id)
         {
-            var wordDefinition = context.Definitions.Where(context => context.Id == id);
+            var wordDefinition = context.Definitions.Where(context => context.BasicWordDetailsId == id);
             if (wordDefinition == null)
             {
                 return;

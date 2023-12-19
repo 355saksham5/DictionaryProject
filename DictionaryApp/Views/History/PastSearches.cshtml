@@ -63,17 +63,13 @@
                 {
                     foreach (var word in Model)
                     {
-                        <li>
-
-                            <a asp-action="SearchById" asp-controller="Home" asp-route-wordId=@word.WordId class ="btn btn-primary py-2">@word.Word</a>
+                       <li>
+                           <a asp-action="SearchByWord" asp-controller="Home" asp-route-word=@word.Word class ="btn btn-primary py-2">@word.Word</a>
                             <br></br>
                         </li>
                     }
                 }
             </ul>
-           <!-- <form class="clrBtn" asp-action="ClearCache" asp-controller="history" method="post">
-                <button type="submit" class="btn btn-danger">Clear</button>
-            </form>-->
         </myform>
         
     </div>

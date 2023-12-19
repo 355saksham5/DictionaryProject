@@ -11,14 +11,9 @@ namespace DictionaryApp.Middlewares
 	public class ExceptionHandlerMiddleware
 	{
 		private RequestDelegate next { get; set; }
-		private IHostEnvironment env { get; set; }
-		private ILogger<ExceptionHandlerMiddleware> logger { get; set; }
-		public ExceptionHandlerMiddleware(RequestDelegate next, ILogger<ExceptionHandlerMiddleware> logger
-			, IHostEnvironment env)
+		public ExceptionHandlerMiddleware(RequestDelegate next)
 		{
 			this.next = next;
-			this.logger = logger;
-			this.env = env;
 		}
 
 		public async Task Invoke(HttpContext context)
@@ -30,6 +25,7 @@ namespace DictionaryApp.Middlewares
 			catch (Exception exception)
 			{
 				HttpStatusCode statusCode = (exception as ApiException)?.StatusCode ?? HttpStatusCode.InternalServerError;
+				
 				if(statusCode == HttpStatusCode.NotFound)
 				{
 					context.Response.Redirect(ConstantResources.wordNotExistPageUrl);

@@ -9,28 +9,24 @@ using System.Net.Http.Headers;
 using System.Text.Json;
 using Microsoft.AspNetCore.Http;
 using System.Net;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
-var options = new JsonSerializerOptions()
-{
-	PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-	WriteIndented = true,
-};
-
-var settings = new RefitSettings()
-{
-	ContentSerializer = new SystemTextJsonContentSerializer(options)
-};
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddControllersWithViews();
 builder.Services.AddTransient<AuthHeaderHandler>();
-builder.Services.AddSingleton(typeof(ILogger<>), typeof(Logger<>));
-builder.Services.AddRefitClient<IDictionaryApi>(settings).ConfigureHttpClient(c =>
+builder.Services.AddRefitClient<IDictionaryApi>().ConfigureHttpClient(c =>
 {
 	c.BaseAddress = new Uri(builder.Configuration[ConstantResources.getBaseAddressDictApi]);
 }).AddHttpMessageHandler<AuthHeaderHandler>();
-builder.Services.AddMvc();
-
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).
+	AddCookie(options =>
+	{
+		options.LoginPath = "/account/login";
+		options.Cookie.HttpOnly = true;
+		options.Cookie.Name = "DictionaryCookie";
+	});
+builder.Services.AddAuthorization();
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -40,15 +36,16 @@ if (app.Environment.IsDevelopment())
 else
 {
 	app.UseMiddleware<ExceptionHandlerMiddleware>();
-	app.UseStatusCodePagesWithReExecute($"{ConstantResources.errPagePath}"+"/{0}");
+	app.UseStatusCodePagesWithReExecute(ConstantResources.errPagePath+"/{0}");
 }
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-app.UseMiddleware<RedirectionMiddleware>();
 app.UseRouting();
-
+app.UseAuthentication();
+app.UseAuthorization();
+//app.UseMiddleware<RedirectionMiddleware>();
 app.MapControllerRoute(
 	name: "default",
-	pattern: "{controller=Home}/{action=Default}");
+	pattern: "{controller=Home}/{action=Index}");
 
 app.Run();

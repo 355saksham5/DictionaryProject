@@ -9,6 +9,6 @@ namespace DictionaryApi.BusinessLayer.Services.IServices
         public Task<IEnumerable<String>> GetAntonymsAsync(Guid wordId);
         public Task<IEnumerable<String>> GetSynonymsAsync(Guid wordId);
         public Task<String> GetPronounciationAsync(Guid wordId);
-        public Task<DefinitionDto> GetDefinitionAsync(int index, Guid wordId);
+        public Task<DefinitionDto> GetDefinitionAsync(int? index, Guid wordId);
     }
 }

@@ -22,7 +22,7 @@ namespace DictionaryApi.DataAccess.DbHandlers
 
         public async Task DeletePronounciationByIdAsync(Guid id)
         {
-            var wordPronounciation = context.PhoneticAudios.Where(context => context.Id == id);
+            var wordPronounciation = context.PhoneticAudios.Where(context => context.BasicWordDetailsId == id);
             if (wordPronounciation == null)
             {
                 return;

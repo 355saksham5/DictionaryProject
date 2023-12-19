@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
+using System.Net;
 
 namespace DictionaryApi.Controllers
 {
@@ -29,16 +30,22 @@ namespace DictionaryApi.Controllers
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> Register([FromBody]IdentityUser user,[Required] string password)
+		public async Task<IActionResult> Register([FromBody]RegisterModel model)
 		{
-			var resultOrignal = await userManager.CreateAsync(user,password);
+            var user = new IdentityUser
+            {
+                UserName = model.Email,
+                Email = model.Email
+            };
+            var resultOrignal = await userManager.CreateAsync(user,model.Password);
             result.Succeeded = resultOrignal.Succeeded;
             result.Errors = resultOrignal.Errors;
 			if(resultOrignal.Succeeded)
 			{
 				return CreatedAtAction(nameof(Register),result);
 			}
-			return Ok(result);
+			
+			return BadRequest(result);
 		}
 
 		[HttpPost]
@@ -48,7 +55,7 @@ namespace DictionaryApi.Controllers
 			if (user == null)
 			{
 				logInResult.UserConflict = true;
-				return Ok(logInResult);
+				return NotFound(logInResult);
 			}
 			var result = await userManager.CheckPasswordAsync(user, model.Password);
 			if(result)
@@ -59,7 +66,7 @@ namespace DictionaryApi.Controllers
 				return Ok(logInResult);
             }
 			logInResult.PasswordFail = true;
-			return Ok(logInResult);
+			return Unauthorized(logInResult);
 		}
 	}
 }

@@ -1,9 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace DictionaryApp.Controllers
 {
 	[AutoValidateAntiforgeryToken]
-
+    [Authorize]
     public class HistoryController : Controller
     {
         private readonly IDictionaryApi dictionary;

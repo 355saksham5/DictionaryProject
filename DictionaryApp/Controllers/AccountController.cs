@@ -1,6 +1,6 @@
-﻿using DictionaryApi.Models;
+﻿using DictionaryApp.Helpers;
+using DictionaryApi.Models;
 using DictionaryApp.Extension;
-using DictionaryApp.Helpers;
 using DictionaryApp.Models;
 using DictionaryApp.ViewModels;
 using Microsoft.AspNetCore.Authentication;
@@ -8,51 +8,64 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using System.Collections.Generic;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using DictionaryApi.BusinessLayer.Services;
+using System.Security.Claims;
 
 namespace DictionaryApp.Controllers
 {
-	[AutoValidateAntiforgeryToken]
-	public class AccountController : Controller
+    [AutoValidateAntiforgeryToken]
+    public class AccountController : Controller
 	{
-		private readonly IDictionaryApi dictionary;
+		private readonly IDictionaryApi dictionaryApi;
 
 		public AccountController( IDictionaryApi dictionary)
 		{
-			this.dictionary = dictionary;
+			this.dictionaryApi = dictionary;
 		}
 
 		[HttpGet]
-		public async Task<IActionResult> Register()
+        public async Task<IActionResult> Register()
 		{
+            if(User.Identity.IsAuthenticated)
+            {
+                return Redirect("~/");
+            }
 			return View();
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> Register(RegisterViewModel model)
+		public async Task<IActionResult> Register(RegisterViewModel modelView)
 		{
+            UserIdentityResult? result;
+            
             if (ModelState.IsValid)
             {
-                var user = new IdentityUser
+                var model = new RegisterModel
                 {
-                    UserName = model.Email,
-                    Email = model.Email
+                    Email = modelView.Email,
+                    Password = modelView.Password,
                 };
-				var result = await dictionary.Register(user,model.Password);
-				if (result.Succeeded)
+                result = await ExceptionHelper.ManageExceptionsUserIdentityResult<UserIdentityResult?>
+                            (async () => { return await dictionaryApi.Register(model); }, ModelState);
+                if (result != null)
                 {
                    return RedirectToAction(nameof(LogIn));
                 }
-                foreach (var error in result.Errors)
-                {
-                    ModelState.AddModelError(string.Empty, error.Description);
-                }
+               
             }
-			return View(model);
+            return View(modelView);
         }
 		[HttpGet]
 		public async Task<IActionResult> LogIn()
 		{
-			return View();
+            if (User.Identity.IsAuthenticated)
+            {
+                return Redirect("~/");
+            }
+            return View();
 		}
 
 		[HttpPost]
@@ -61,21 +74,13 @@ namespace DictionaryApp.Controllers
             if (ModelState.IsValid)
             {
                 var logInCred = new LoginModel { Password = model.Password , Email = model.Email };
-                var result = await dictionary.LogIn(logInCred);
-                if (!String.IsNullOrEmpty(result.jwt))
+                var result = await ExceptionHelper.ManageExceptionsLogInResult<LogInResult>
+               (async () => { return await dictionaryApi.LogIn(logInCred); }, ModelState);
+                if (result!=null)
                 {
                     await HttpContext.OnLogInAsync(result.jwt);
-                    return RedirectToAction("default", "home");
-                }
-                if(result.PasswordFail)
-                {
-                    ModelState.AddModelError(string.Empty, ConstantResources.wrongCredErr);
-                }
-                else
-                {
-                    ModelState.AddModelError(string.Empty, ConstantResources.userNotFoundErr);
-                }
-                
+                    return RedirectToAction("index", "home");
+                }                
             }
             return View(model);
         }

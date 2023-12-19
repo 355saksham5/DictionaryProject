@@ -3,6 +3,7 @@ using DictionaryApi.DataAccess.DbHandlers.IDbHandlers;
 using DictionaryApi.ExternalApiHandlers.IExternalApiHandlers;
 using DictionaryApi.Models.DTOs;
 using DictionaryApi.Models.MeaningApi;
+using Hangfire;
 
 namespace DictionaryApi.BusinessLayer.Services
 {
@@ -11,7 +12,10 @@ namespace DictionaryApi.BusinessLayer.Services
         private readonly IBasicWordDetailsRepo appCache;
         private readonly IMeaningApiMapper meaningApiMapper;
 		private readonly IMeaningApi meaningApi;
-		public Cache(IBasicWordDetailsRepo appCache,IMeaningApiMapper meaningApiMapper, IMeaningApi meaningApi)
+        private readonly IDefinitionsRepo definitionsRepo;
+        private readonly IPhoneticAudiosRepo phoneticAudiosRepo;
+        
+		public  Cache(IBasicWordDetailsRepo appCache,IMeaningApiMapper meaningApiMapper, IMeaningApi meaningApi)
         {
             this.appCache = appCache;
             this.meaningApiMapper = meaningApiMapper;
@@ -27,6 +31,16 @@ namespace DictionaryApi.BusinessLayer.Services
             }
             return wordCached;
         }
-
+        public void DeleteFromCache()
+        {
+            var wordIdsToBeCleared = appCache.GetLeastRecentlyUsed();
+            foreach(var wordId in wordIdsToBeCleared)
+            {
+                appCache.DeleteDetailsByIdAsync(wordId);
+                definitionsRepo.DeleteDefinitionByIdAsync(wordId);
+                phoneticAudiosRepo.DeletePronounciationByIdAsync(wordId);
+            }
+                
+        }
     }
 }

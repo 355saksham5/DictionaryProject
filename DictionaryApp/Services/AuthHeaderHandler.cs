@@ -17,7 +17,7 @@ namespace DictionaryApp.Services
 
 			var token = accessor?.HttpContext?.Request.Cookies[ConstantResources.cookieName];
 			request.Headers.Authorization = new AuthenticationHeaderValue(ConstantResources.cookieIdentifier, token);
-			return await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
+			return await base.SendAsync(request, cancellationToken);
 		}
 	}
 }

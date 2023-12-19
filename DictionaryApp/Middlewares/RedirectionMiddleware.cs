@@ -14,9 +14,9 @@ namespace DictionaryApp.Middlewares
         public async Task InvokeAsync(HttpContext context)
         {
             var currentUrl = context.Request.GetDisplayUrl();
-            var currentHttpMethod = context.Request.Method;
             var userToken = context.Request.Cookies[ConstantResources.cookieName];
-            var isRequestAllowed = ConstantResources.allowedGetUrls.Contains(currentUrl) || currentHttpMethod.CustomEquals("Post") || userToken != null && userToken != "";
+            var isRequestAllowed = ConstantResources.allowedUrls.Contains(currentUrl) ||  
+                (userToken != null && userToken != "");
             if (!isRequestAllowed)
             {
                 context.Response.Redirect(ConstantResources.loginUrl);
