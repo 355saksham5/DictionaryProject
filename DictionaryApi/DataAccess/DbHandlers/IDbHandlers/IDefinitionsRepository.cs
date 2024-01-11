@@ -2,7 +2,7 @@
 
 namespace DictionaryApi.DataAccess.DbHandlers.IDbHandlers
 {
-    public interface IDefinitionsRepo
+    public interface IDefinitionsRepository
     {
         public Task<IEnumerable<DefinitionDto>> GetAllDefinitionsByWordIdAsync(Guid BasicWordDetailId);
 

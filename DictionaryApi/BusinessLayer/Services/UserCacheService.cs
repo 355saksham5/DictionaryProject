@@ -11,15 +11,14 @@ namespace DictionaryApi.BusinessLayer.Services
 {
 	public class UserCacheService : IUserCacheService
 	{
-		private readonly IUserCacheRepo userCacheRepo;
+		private readonly IUserCacheRepository userCacheRepo;
 		private CachedWord cachedWord;
 		private Guid userId { get; set; }
-		public UserCacheService(IUserCacheRepo userCacheRepo, IHttpContextAccessor contextAccessor,
-			CachedWord cachedWord)
+		public UserCacheService(IUserCacheRepository userCacheRepo, IHttpContextAccessor contextAccessor)
 		{
 			this.userCacheRepo = userCacheRepo;
 			userId = new Guid(contextAccessor.HttpContext.User.Claims.FirstOrDefault(c => c.Type.Equals(ConstantResources.claimInJwt))?.Value);
-			this.cachedWord = cachedWord;
+			this.cachedWord = new CachedWord();
 		}
 
 		public async Task ClearCacheAsync()

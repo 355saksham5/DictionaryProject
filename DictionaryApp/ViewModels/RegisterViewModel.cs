@@ -9,7 +9,8 @@ namespace DictionaryApp.ViewModels
 
 		[Required]
 		[EmailAddress]
-		public string? Email { get; set; }
+        [Display(Name = "UserName(Email)")]
+        public string? Email { get; set; }
 
 
         [Required(ErrorMessage = nameof(Password)+ConstantResources.errMssgRequired)]

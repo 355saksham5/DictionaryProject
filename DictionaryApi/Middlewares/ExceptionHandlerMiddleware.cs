@@ -28,7 +28,7 @@ namespace DictionaryApi.Middlewares
 			catch (Exception exception)
 			{
 				ErrorModel response;
-				HttpStatusCode statusCode = (exception as ApiException)?.StatusCode ?? (exception as AnyHttpException)?.statusCode
+				HttpStatusCode statusCode = ((exception as ApiException)?.StatusCode ?? (exception as AnyHttpException)?.statusCode)
 					                                ?? HttpStatusCode.InternalServerError;
 			    var exceptionType = exception.GetType();
 				if(env.IsDevelopment())
@@ -39,10 +39,7 @@ namespace DictionaryApi.Middlewares
 				{
 					response = new ErrorModel((int)statusCode, exception.Message);
 				}
-				if (statusCode == HttpStatusCode.NotFound)
-				{
-					response.ErrorMessage = ConstantResources.wordNotFoundErr;
-				}
+				
 				logger.LogError(exception, exception.Message);
 				context.Response.StatusCode = (int)statusCode;
 				context.Response.ContentType = ConstantResources.exceptionResponseType;

@@ -9,13 +9,13 @@ namespace DictionaryApi.BusinessLayer.Services
 {
     public class Cache : ICache
     {
-        private readonly IBasicWordDetailsRepo appCache;
+        private readonly IBasicWordDetailsRepository appCache;
         private readonly IMeaningApiMapper meaningApiMapper;
 		private readonly IMeaningApi meaningApi;
-        private readonly IDefinitionsRepo definitionsRepo;
-        private readonly IPhoneticAudiosRepo phoneticAudiosRepo;
+        private readonly IDefinitionsRepository definitionsRepo;
+        private readonly IPhoneticAudiosRepository phoneticAudiosRepo;
         
-		public  Cache(IBasicWordDetailsRepo appCache,IMeaningApiMapper meaningApiMapper, IMeaningApi meaningApi)
+		public  Cache(IBasicWordDetailsRepository appCache,IMeaningApiMapper meaningApiMapper, IMeaningApi meaningApi)
         {
             this.appCache = appCache;
             this.meaningApiMapper = meaningApiMapper;

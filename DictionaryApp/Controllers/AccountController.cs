@@ -48,7 +48,7 @@ namespace DictionaryApp.Controllers
                     Email = modelView.Email,
                     Password = modelView.Password,
                 };
-                result = await ExceptionHelper.ManageExceptionsUserIdentityResult<UserIdentityResult?>
+                result = await ExceptionHelper.ManageExceptionsRegister<UserIdentityResult?>
                             (async () => { return await dictionaryApi.Register(model); }, ModelState);
                 if (result != null)
                 {
@@ -74,7 +74,7 @@ namespace DictionaryApp.Controllers
             if (ModelState.IsValid)
             {
                 var logInCred = new LoginModel { Password = model.Password , Email = model.Email };
-                var result = await ExceptionHelper.ManageExceptionsLogInResult<LogInResult>
+                var result = await ExceptionHelper.ManageExceptionsLogIn<LogInResult>
                (async () => { return await dictionaryApi.LogIn(logInCred); }, ModelState);
                 if (result!=null)
                 {

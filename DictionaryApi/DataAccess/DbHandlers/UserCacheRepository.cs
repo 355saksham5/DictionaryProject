@@ -9,12 +9,12 @@ using System.Collections.Concurrent;
 
 namespace DictionaryApi.DataAccess.DbHandlers
 {
-	public class UserCacheRepo : IUserCacheRepo
+	public class UserCacheRepository : IUserCacheRepository
 	{
 		private readonly AppDbContext context;
 		private readonly int limit = ConstantResources.limitOfCache;
 
-		public UserCacheRepo(AppDbContext context)
+		public UserCacheRepository(AppDbContext context)
 		{
 			this.context = context;
 		}

@@ -64,7 +64,7 @@
                     foreach (var word in Model)
                     {
                        <li>
-                           <a asp-action="SearchByWord" asp-controller="Home" asp-route-word=@word.Word class ="btn btn-primary py-2">@word.Word</a>
+                           <a asp-action="SearchByStringWord" asp-controller="Home" asp-route-word=@word.Word class ="btn btn-primary py-2">@word.Word</a>
                             <br></br>
                         </li>
                     }

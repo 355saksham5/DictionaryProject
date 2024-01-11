@@ -21,7 +21,8 @@
 		public const string errOnWordIdNull = "Word Id is Null";
 		public const string errOnInvalidWordId = "Word Id is Invalid";
         public const int timeWindow = 6;
-        public static int flag = 0;
+        public static bool isAppStarting = true;
+        public const int maxAgeCache = 86400;
 
 
     }

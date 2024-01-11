@@ -2,7 +2,7 @@
 
 namespace DictionaryApi.DataAccess.DbHandlers.IDbHandlers
 {
-    public interface IPhoneticAudiosRepo
+    public interface IPhoneticAudiosRepository
     {
         public Task<PhoneticDto> GetPronounciationByWordIdAsync(Guid basicWordDetailsId);
 

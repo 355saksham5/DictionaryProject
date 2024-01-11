@@ -20,7 +20,6 @@ using Refit;
 using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
-
 builder.Services.AddControllers();
 builder.Services.AddApiVersioning(x =>
 {
@@ -29,50 +28,48 @@ builder.Services.AddApiVersioning(x =>
 	x.ReportApiVersions = true;
 });
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-builder.Services.AddDbContextPool<AppDbContext>(option => option.UseSqlServer(builder.Configuration.GetConnectionString(ConstantResources.getConnectionString)));
+builder.Services.AddSwaggerGenWithAuthorize();
+builder.Services.AddDbContext<AppDbContext>(option => option.UseSqlServer(builder.Configuration.GetConnectionString(ConstantResources.getConnectionString)));
 builder.Services.AddRefitClient<IMeaningApi>().ConfigureHttpClient(c => c.BaseAddress = new Uri(builder.Configuration[ConstantResources.getBaseAddressMeaningApi]));
 builder.Services.AddRefitClient<ISuggestionApi>().ConfigureHttpClient(c => c.BaseAddress = new Uri(builder.Configuration[ConstantResources.getBaseAddressSuggestionApi]));
 builder.Services.AddHangfire(option => option.UseMemoryStorage());
 builder.Services.AddHangfireServer();
 
 builder.Services.AddHttpContextAccessor();
-builder.Services.AddIdentity<IdentityUser, IdentityRole>(option => { option.User.RequireUniqueEmail = true; }).AddEntityFrameworkStores<AppDbContext>();
+builder.Services.AddIdentity<IdentityUser, IdentityRole>(option => {  }).AddEntityFrameworkStores<AppDbContext>();
 builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection(JwtOptions.SectionName));
 builder.Services.AddJwtTokenServices(builder.Configuration);
 
 
-builder.Services.AddScoped<IBasicWordDetailsRepo, BasicWordDetailRepo>();
-builder.Services.AddScoped<IPhoneticAudiosRepo, PhoneticAudiosRepo>();
-builder.Services.AddScoped<IDefinitionsRepo, DefinitionRepo>();
-builder.Services.AddScoped<IAntonymsRepo, AntonymsRepo>();
-builder.Services.AddScoped<ISynonymsRepo, SynonymsRepo>();
-builder.Services.AddScoped<IUserCacheRepo, UserCacheRepo>();
-
-builder.Services.AddScoped<BasicWordDetails>();
-builder.Services.AddScoped<UserIdentityResult>();
-builder.Services.AddScoped<LogInResult>();
-builder.Services.AddScoped<CachedWord>();
+builder.Services.AddScoped<IBasicWordDetailsRepository, BasicWordDetailRepository>();
+builder.Services.AddScoped<IPhoneticAudiosRepository, PhoneticAudiosRepository>();
+builder.Services.AddScoped<IDefinitionsRepository, DefinitionRepository>();
+builder.Services.AddScoped<IAntonymsRepository, AntonymsRepository>();
+builder.Services.AddScoped<ISynonymsRepository, SynonymsRepository>();
+builder.Services.AddScoped<IUserCacheRepository, UserCacheRepository>();
 
 builder.Services.AddScoped<ICache, Cache>();
 builder.Services.AddScoped<IWordDetailsService, WordDetailsService>();
 builder.Services.AddScoped<IMeaningApiMapper, MeaningApiMapper>();
 builder.Services.AddScoped<ISuggestionService, SuggestionService>();
 builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
+builder.Services.AddSingleton<IJwtTokenService, JwtTokenService>();
 builder.Services.AddScoped<IUserCacheService, UserCacheService>();
 
 var app = builder.Build();
+
 app.UseSwagger();
 app.UseSwaggerUI();
-app.Use(async (context, next) =>
+
+if (ConstantResources.isAppStarting)
 {
-	if(ConstantResources.flag==0)
+	app.Use(async (context, next) =>
 	{
-        RecurringJob.AddOrUpdate("clearCache", (ICache cache) => cache.DeleteFromCache(), Cron.Daily);
-		ConstantResources.flag = 1;
-    }
-    await next();
-});
+		RecurringJob.AddOrUpdate("clearCache", (ICache cache) => cache.DeleteFromCache(), Cron.Daily);
+		ConstantResources.isAppStarting = false;
+		await next();
+	});
+}
 app.UseMiddleware<ExceptionHandlerMiddleware>();
 app.UseHttpsRedirection();
 app.UseAuthentication();

@@ -2,7 +2,7 @@
 
 namespace DictionaryApi.DataAccess.DbHandlers.IDbHandlers
 {
-	public interface IAntonymsRepo
+	public interface IAntonymsRepository
 	{
 		public Task AddAntonymsAsync(Antonyms antonyms);
 

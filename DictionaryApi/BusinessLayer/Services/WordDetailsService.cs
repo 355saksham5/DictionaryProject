@@ -12,15 +12,15 @@ namespace DictionaryApi.BusinessLayer.Services
 {
     public class WordDetailsService : IWordDetailsService
     {
-        private readonly IBasicWordDetailsRepo wordDetails;
-        private readonly IDefinitionsRepo definitions;
-        private readonly IPhoneticAudiosRepo phoneticAudio;
-        private readonly IAntonymsRepo antonymsRepo;
-		private readonly ISynonymsRepo synonymsRepo;
+        private readonly IBasicWordDetailsRepository wordDetails;
+        private readonly IDefinitionsRepository definitions;
+        private readonly IPhoneticAudiosRepository phoneticAudio;
+        private readonly IAntonymsRepository antonymsRepo;
+		private readonly ISynonymsRepository synonymsRepo;
 		private readonly ICache appCache;
 		private readonly IUserCacheService userCache;
-		public WordDetailsService(IBasicWordDetailsRepo wordDetails,IDefinitionsRepo definition, IPhoneticAudiosRepo phoneticAudio, ICache appCache,
-            IAntonymsRepo antonyms, ISynonymsRepo synonyms, IUserCacheService userCache)
+		public WordDetailsService(IBasicWordDetailsRepository wordDetails,IDefinitionsRepository definition, IPhoneticAudiosRepository phoneticAudio, ICache appCache,
+            IAntonymsRepository antonyms, ISynonymsRepository synonyms, IUserCacheService userCache)
         {
             this.wordDetails = wordDetails;
             this.definitions = definition;
@@ -75,7 +75,7 @@ namespace DictionaryApi.BusinessLayer.Services
 			}
             else
             {
-                throw new BadHttpRequestException(ConstantResources.errorOnInvalidIndex);
+                throw new AnyHttpException(HttpStatusCode.BadRequest,ConstantResources.errorOnInvalidIndex);
             }
         }
 

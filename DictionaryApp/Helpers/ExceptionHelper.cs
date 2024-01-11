@@ -21,7 +21,7 @@ namespace DictionaryApp.Helpers
 				return default;
             }
         }
-        public async static Task<T?> ManageExceptionsUserIdentityResult<T>(Func<Task<T?>> func, ModelStateDictionary ModelState)
+        public async static Task<T?> ManageExceptionsRegister<T>(Func<Task<T?>> func, ModelStateDictionary ModelState)
         {
             try
             {
@@ -37,7 +37,7 @@ namespace DictionaryApp.Helpers
                 return default;
             }
         }
-        public async static Task<T?> ManageExceptionsLogInResult<T>(Func<Task<T?>> func, ModelStateDictionary ModelState)
+        public async static Task<T?> ManageExceptionsLogIn<T>(Func<Task<T?>> func, ModelStateDictionary ModelState)
         {
             try
             {

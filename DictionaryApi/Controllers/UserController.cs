@@ -10,8 +10,8 @@ using System.Net;
 namespace DictionaryApi.Controllers
 {
 	[AllowAnonymous]
-	[ApiController]
-	[Route("api/[controller]/[action]")]
+    [ApiController]
+    [Route("api/[controller]/[action]")]
 	[ApiVersion(ConstantResources.apiVersion)]
 	public class UserController : ControllerBase
 	{
@@ -20,13 +20,12 @@ namespace DictionaryApi.Controllers
         private LogInResult logInResult;
         private IJwtTokenService jwt;
 
-        public UserController(UserManager<IdentityUser> userManager, UserIdentityResult result, IJwtTokenService jwt
-			,LogInResult logInResult)
+        public UserController(UserManager<IdentityUser> userManager, IJwtTokenService jwt)
 		{
 			this.userManager = userManager;
-			this.result = result;
+			this.result = new UserIdentityResult();
 			this.jwt = jwt;
-			this.logInResult = logInResult;
+			this.logInResult = new LogInResult();
 		}
 
 		[HttpPost]

@@ -4,11 +4,11 @@ using DictionaryApi.Models.DTOs;
 
 namespace DictionaryApi.DataAccess.DbHandlers
 {
-	public class AntonymsRepo : IAntonymsRepo
+	public class AntonymsRepository : IAntonymsRepository
 	{
 		private readonly AppDbContext context;
 
-		public AntonymsRepo(AppDbContext context)
+		public AntonymsRepository(AppDbContext context)
 		{
 			this.context = context;
 		}

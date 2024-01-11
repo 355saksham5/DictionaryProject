@@ -5,11 +5,11 @@ using DictionaryApi.Models.MeaningApi;
 
 namespace DictionaryApi.DataAccess.DbHandlers
 {
-    public class DefinitionRepo : IDefinitionsRepo
+    public class DefinitionRepository : IDefinitionsRepository
     {
         private readonly AppDbContext context;
 
-        public DefinitionRepo(AppDbContext context)
+        public DefinitionRepository(AppDbContext context)
         {
             this.context = context;
         }

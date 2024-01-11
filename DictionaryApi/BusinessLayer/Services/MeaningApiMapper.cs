@@ -8,19 +8,19 @@ namespace DictionaryApi.BusinessLayer.Services
 {
 	public class MeaningApiMapper : IMeaningApiMapper
 	{
-		private IBasicWordDetailsRepo? BasicWordDetailsRepo { get; set; }
-		private IDefinitionsRepo? DefinitionsRepo { get; set; }
-		private IPhoneticAudiosRepo? PhoneticAudiosRepo { get; set; }
-		private IAntonymsRepo? AntonymsRepo { get; set; }
-		private ISynonymsRepo? SynonymsRepo { get; set; }
+		private IBasicWordDetailsRepository? BasicWordDetailsRepo { get; set; }
+		private IDefinitionsRepository? DefinitionsRepo { get; set; }
+		private IPhoneticAudiosRepository? PhoneticAudiosRepo { get; set; }
+		private IAntonymsRepository? AntonymsRepo { get; set; }
+		private ISynonymsRepository? SynonymsRepo { get; set; }
 		private BasicWordDetails? BasicWordDetails { get; set; }
 
-		public MeaningApiMapper(IBasicWordDetailsRepo? basicWordDetailsRepo, BasicWordDetails? basicWordDetails,
-			IPhoneticAudiosRepo? phoneticAudiosRepo, IDefinitionsRepo? definitionsRepo, IAntonymsRepo? AntonymsRepo,
-			ISynonymsRepo? SynonymsRepo)
+		public MeaningApiMapper(IBasicWordDetailsRepository? basicWordDetailsRepo,
+			IPhoneticAudiosRepository? phoneticAudiosRepo, IDefinitionsRepository? definitionsRepo, IAntonymsRepository? AntonymsRepo,
+			ISynonymsRepository? SynonymsRepo)
 		{
 			this.BasicWordDetailsRepo = basicWordDetailsRepo;
-			this.BasicWordDetails = basicWordDetails;
+			this.BasicWordDetails = new BasicWordDetails();
 			this.PhoneticAudiosRepo = phoneticAudiosRepo;	
 			this.DefinitionsRepo = definitionsRepo;
 			this.SynonymsRepo = SynonymsRepo;

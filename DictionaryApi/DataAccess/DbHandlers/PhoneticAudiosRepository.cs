@@ -5,11 +5,11 @@ using DictionaryApi.Models.MeaningApi;
 
 namespace DictionaryApi.DataAccess.DbHandlers
 {
-    public class PhoneticAudiosRepo : IPhoneticAudiosRepo
+    public class PhoneticAudiosRepository : IPhoneticAudiosRepository
     {
         private readonly AppDbContext context;
 
-        public PhoneticAudiosRepo(AppDbContext context)
+        public PhoneticAudiosRepository(AppDbContext context)
         {
             this.context = context;
         }

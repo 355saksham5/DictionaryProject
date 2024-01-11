@@ -1,6 +1,7 @@
 ﻿using DictionaryApi.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using System.Text;
 
 namespace DictionaryApi.Extensions
@@ -30,5 +31,25 @@ namespace DictionaryApi.Extensions
 				};
 			});
 		}
+		public static void AddSwaggerGenWithAuthorize(this IServiceCollection services)
+		{
+			services.AddSwaggerGen(options =>
+            {
+                options.AddSecurityDefinition("bearer", new OpenApiSecurityScheme
+                {
+                    Type = SecuritySchemeType.Http,
+                    In = ParameterLocation.Header,
+                    Name = "Authorization",
+                    Scheme = JwtBearerDefaults.AuthenticationScheme
+                });
+                options.AddSecurityRequirement(new OpenApiSecurityRequirement{
+                  {
+                    new OpenApiSecurityScheme()
+                  {
+                     Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "bearer" }
+                  },new string[] {"Bearer"}
+				  }});
+            });
+        }
 	}
 }

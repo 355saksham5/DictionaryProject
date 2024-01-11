@@ -28,13 +28,12 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 	});
 builder.Services.AddAuthorization();
 var app = builder.Build();
-
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
 }
 else
-{
+{ 
 	app.UseMiddleware<ExceptionHandlerMiddleware>();
 	app.UseStatusCodePagesWithReExecute(ConstantResources.errPagePath+"/{0}");
 }
@@ -43,7 +42,6 @@ app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
-//app.UseMiddleware<RedirectionMiddleware>();
 app.MapControllerRoute(
 	name: "default",
 	pattern: "{controller=Home}/{action=Index}");

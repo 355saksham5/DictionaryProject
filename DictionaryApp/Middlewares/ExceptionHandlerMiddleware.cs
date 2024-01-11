@@ -8,7 +8,7 @@ using System.Text.Json;
 
 namespace DictionaryApp.Middlewares
 {
-	public class ExceptionHandlerMiddleware
+	public class ExceptionHandlerMiddleware 
 	{
 		private RequestDelegate next { get; set; }
 		public ExceptionHandlerMiddleware(RequestDelegate next)

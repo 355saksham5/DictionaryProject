@@ -8,11 +8,11 @@ using System;
 
 namespace DictionaryApi.DataAccess.DbHandlers
 {
-    public class BasicWordDetailRepo : IBasicWordDetailsRepo
+    public class BasicWordDetailRepository : IBasicWordDetailsRepository
     {
         private readonly AppDbContext context;
 
-        public BasicWordDetailRepo(AppDbContext context)
+        public BasicWordDetailRepository(AppDbContext context)
         {
             this.context = context;
         }

@@ -47,17 +47,7 @@ namespace DictionaryApp.Controllers
             var wordDetails = await dictionary.GetWordDetailsById(wordId);
             return View(nameof(Search), wordDetails);
         }
-        [HttpGet]
-        public async Task<IActionResult> SearchByWord(string word)
-        {
-            var wordDetails = await ExceptionHelper.ManageExceptions<BasicWordDetails>
-              (async () => { return await dictionary.GetWordDetails(word); }, TempData);
-            if (wordDetails != null)
-            {
-                return View("Search",wordDetails);
-            }
-            return RedirectToAction(nameof(Index));
-        }
+        
         [HttpGet]
         public async Task<IActionResult> Antonyms(Guid wordId)
         {
@@ -82,6 +72,17 @@ namespace DictionaryApp.Controllers
         {
             var pronounciation = await dictionary.GetPronounciation(wordId);
             return Redirect(pronounciation);
+        }
+        [HttpGet]
+        public async Task<IActionResult> SearchByStringWord(string word)
+        {
+            var wordDetails = await ExceptionHelper.ManageExceptions<BasicWordDetails>
+              (async () => { return await dictionary.GetWordDetails(word); }, TempData);
+            if (wordDetails != null)
+            {
+                return View("Search", wordDetails);
+            }
+            return RedirectToAction(nameof(Index));
         }
     }
 }

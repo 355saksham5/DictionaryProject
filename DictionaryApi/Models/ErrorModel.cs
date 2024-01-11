@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using DictionaryApi.Helpers;
+using Newtonsoft.Json;
+using System.Net;
 using System.Text.Json.Serialization;
 
 namespace DictionaryApi.Models
@@ -19,8 +21,18 @@ namespace DictionaryApi.Models
         public ErrorModel(int errCode, string errMssg, string errDetails = null!)
 		{
 			ErrorCode = errCode;
-			ErrorMessage = errMssg;
+			ErrorMessage = OverWriteErrorMssgs(errCode) ?? errMssg;
 			ErrorDetails = errDetails;
+		}
+		private static string? OverWriteErrorMssgs(int errCode)
+		{
+			switch (errCode)
+			{
+				case (int)HttpStatusCode.NotFound:
+					return ConstantResources.wordNotFoundErr;
+				default:
+					return null;
+            }
 		}
 	}
 }

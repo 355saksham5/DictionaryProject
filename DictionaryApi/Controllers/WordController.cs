@@ -14,6 +14,7 @@ namespace DictionaryApi.Controllers
     [ApiController]
     [Route("api/[controller]/[action]")]
 	[ApiVersion(ConstantResources.apiVersion)]
+    [ResponseCache(Duration = ConstantResources.maxAgeCache)]
 	public class WordController : ControllerBase
     {
         private readonly IWordDetailsService wordDetailsService;
