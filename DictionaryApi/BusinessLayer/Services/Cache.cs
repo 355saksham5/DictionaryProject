@@ -13,7 +13,7 @@ namespace DictionaryApi.BusinessLayer.Services
         private readonly IMeaningApiMapper meaningApiMapper;
 		private readonly IMeaningApi meaningApi;
         private readonly IDefinitionsRepository definitionsRepo;
-        private readonly IPhoneticAudiosRepository phoneticAudiosRepo;
+        private readonly IPhoneticAudioRepository phoneticAudiosRepo;
         
 		public  Cache(IBasicWordDetailsRepository appCache,IMeaningApiMapper meaningApiMapper, IMeaningApi meaningApi)
         {
@@ -37,8 +37,6 @@ namespace DictionaryApi.BusinessLayer.Services
             foreach(var wordId in wordIdsToBeCleared)
             {
                 appCache.DeleteDetailsByIdAsync(wordId);
-                definitionsRepo.DeleteDefinitionByIdAsync(wordId);
-                phoneticAudiosRepo.DeletePronounciationByIdAsync(wordId);
             }
                 
         }

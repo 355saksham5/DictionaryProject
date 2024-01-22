@@ -42,7 +42,7 @@ builder.Services.AddJwtTokenServices(builder.Configuration);
 
 
 builder.Services.AddScoped<IBasicWordDetailsRepository, BasicWordDetailRepository>();
-builder.Services.AddScoped<IPhoneticAudiosRepository, PhoneticAudiosRepository>();
+builder.Services.AddScoped<IPhoneticAudioRepository, PhoneticAudiosRepository>();
 builder.Services.AddScoped<IDefinitionsRepository, DefinitionRepository>();
 builder.Services.AddScoped<IAntonymsRepository, AntonymsRepository>();
 builder.Services.AddScoped<ISynonymsRepository, SynonymsRepository>();

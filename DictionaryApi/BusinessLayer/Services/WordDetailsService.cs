@@ -14,12 +14,12 @@ namespace DictionaryApi.BusinessLayer.Services
     {
         private readonly IBasicWordDetailsRepository wordDetails;
         private readonly IDefinitionsRepository definitions;
-        private readonly IPhoneticAudiosRepository phoneticAudio;
+        private readonly IPhoneticAudioRepository phoneticAudio;
         private readonly IAntonymsRepository antonymsRepo;
 		private readonly ISynonymsRepository synonymsRepo;
 		private readonly ICache appCache;
 		private readonly IUserCacheService userCache;
-		public WordDetailsService(IBasicWordDetailsRepository wordDetails,IDefinitionsRepository definition, IPhoneticAudiosRepository phoneticAudio, ICache appCache,
+		public WordDetailsService(IBasicWordDetailsRepository wordDetails,IDefinitionsRepository definition, IPhoneticAudioRepository phoneticAudio, ICache appCache,
             IAntonymsRepository antonyms, ISynonymsRepository synonyms, IUserCacheService userCache)
         {
             this.wordDetails = wordDetails;
@@ -32,7 +32,7 @@ namespace DictionaryApi.BusinessLayer.Services
         }
 
         public async Task<IEnumerable<string>?> GetAntonymsAsync(Guid wordId)
-        {
+        { 
             if(!await ValidateWordIdAsync(wordId))
             {
                 return null;
@@ -99,14 +99,15 @@ namespace DictionaryApi.BusinessLayer.Services
 			return synonyms;
 		}
 
-        public async Task<bool> ValidateWordIdAsync(Guid wordId)
+        private async Task<bool> ValidateWordIdAsync(Guid wordId)
         {
             if(wordId==null)
             {
                 throw new AnyHttpException(HttpStatusCode.BadRequest, ConstantResources.errorOnInvalidWordId);
             }
             var details = await wordDetails.GetDetailsByIdAsync(wordId);
-            if(details != null)
+            //var details = wordDetails.GetDetailsByIdAsync(wordId);
+            if (details != null)
             {
                 return true;
             }

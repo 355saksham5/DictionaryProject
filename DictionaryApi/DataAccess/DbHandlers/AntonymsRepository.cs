@@ -15,13 +15,14 @@ namespace DictionaryApi.DataAccess.DbHandlers
 		public async Task AddAntonymsAsync(Antonyms antonym)
 		{
 			await context.Antonyms.AddAsync(antonym);
+			await context.SaveChangesAsync();
 		}
 
 		public async Task<IEnumerable<string?>?> GetAntonymsAsync(Guid BasicWordDetailsId)
 		{
 			var words = context.Antonyms.Where(antonym=>antonym.BasicWordDetailsId==BasicWordDetailsId)
 				.Select(antonym=>antonym.Antonym).SelectMany(word=>word);
-			return words?.Select(word=>word.Word).ToList();
+			return words.Select(word=>word.Word).ToList();
 
 		}
 	}

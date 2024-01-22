@@ -49,7 +49,7 @@ namespace DictionaryApi.BusinessLayer.Services
                 await userCacheRepo.AddWordToCacheAsync(userId, userCache);
             }
 		}
-        public async Task<bool> IsAlreadyCachedAsync(String word)
+        private async Task<bool> IsAlreadyCachedAsync(String word)
         {
 			var userCache = await userCacheRepo.GetCacheByUserIdAsync(userId);
 			var cachedWords = userCache.Where(c => c.Cache.Word == word);

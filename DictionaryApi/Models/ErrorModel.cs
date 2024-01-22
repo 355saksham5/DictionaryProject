@@ -1,10 +1,12 @@
 ﻿using DictionaryApi.Helpers;
 using Newtonsoft.Json;
+using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.Text.Json.Serialization;
 
 namespace DictionaryApi.Models
 {
+	[ExcludeFromCodeCoverage]
 	public class ErrorModel
 	{
 		[JsonPropertyName("ErrorCode")]

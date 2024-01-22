@@ -1,11 +1,13 @@
 ﻿using DictionaryApi.Helpers;
 using DictionaryApi.Models;
 using Refit;
+using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.Text.Json;
 
 namespace DictionaryApi.Middlewares
 {
+	[ExcludeFromCodeCoverage]
 	public class ExceptionHandlerMiddleware
 	{
 		private RequestDelegate next { get; set; }

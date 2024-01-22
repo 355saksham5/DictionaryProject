@@ -3,20 +3,22 @@ using DictionaryApi.DataAccess.DbHandlers;
 using DictionaryApi.DataAccess.DbHandlers.IDbHandlers;
 using DictionaryApi.Models.DTOs;
 using DictionaryApi.Models.MeaningApi;
+using System.Diagnostics.CodeAnalysis;
 
 namespace DictionaryApi.BusinessLayer.Services
 {
+	[ExcludeFromCodeCoverage]
 	public class MeaningApiMapper : IMeaningApiMapper
 	{
 		private IBasicWordDetailsRepository? BasicWordDetailsRepo { get; set; }
 		private IDefinitionsRepository? DefinitionsRepo { get; set; }
-		private IPhoneticAudiosRepository? PhoneticAudiosRepo { get; set; }
+		private IPhoneticAudioRepository? PhoneticAudiosRepo { get; set; }
 		private IAntonymsRepository? AntonymsRepo { get; set; }
 		private ISynonymsRepository? SynonymsRepo { get; set; }
 		private BasicWordDetails? BasicWordDetails { get; set; }
 
 		public MeaningApiMapper(IBasicWordDetailsRepository? basicWordDetailsRepo,
-			IPhoneticAudiosRepository? phoneticAudiosRepo, IDefinitionsRepository? definitionsRepo, IAntonymsRepository? AntonymsRepo,
+			IPhoneticAudioRepository? phoneticAudiosRepo, IDefinitionsRepository? definitionsRepo, IAntonymsRepository? AntonymsRepo,
 			ISynonymsRepository? SynonymsRepo)
 		{
 			this.BasicWordDetailsRepo = basicWordDetailsRepo;
