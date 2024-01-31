@@ -7,6 +7,7 @@ using System.Reflection.Metadata;
 using DictionaryApi.Helpers;
 using Refit;
 using System.Net;
+using System.Diagnostics.CodeAnalysis;
 
 namespace DictionaryApi.BusinessLayer.Services
 {
@@ -31,7 +32,7 @@ namespace DictionaryApi.BusinessLayer.Services
             this.userCache = userCache;
         }
 
-        public async Task<IEnumerable<string>?> GetAntonymsAsync(Guid wordId)
+        public async Task<IEnumerable<string>> GetAntonymsAsync(Guid wordId)
         { 
             if(!await ValidateWordIdAsync(wordId))
             {
@@ -57,7 +58,7 @@ namespace DictionaryApi.BusinessLayer.Services
             return details;
         }
 
-        public async Task<DefinitionDto?> GetDefinitionAsync(int? index, Guid wordId)
+        public async Task<DefinitionDto> GetDefinitionAsync(int? index, Guid wordId)
         { 
             if(index == null)
             {
@@ -79,17 +80,17 @@ namespace DictionaryApi.BusinessLayer.Services
             }
         }
 
-        public async Task<string?> GetPronounciationAsync(Guid wordId)
+        public async Task<string> GetPronounciationAsync(Guid wordId)
         {
 			if (!await ValidateWordIdAsync(wordId))
 			{
 				return null;
 			}
 			var pronounciation = await phoneticAudio.GetPronounciationByWordIdAsync(wordId);
-            return pronounciation?.PronounceLink;
+            return pronounciation.PronounceLink;
         }
 
-        public async Task<IEnumerable<string>?> GetSynonymsAsync(Guid wordId)
+        public async Task<IEnumerable<string>> GetSynonymsAsync(Guid wordId)
         {
 			if (!await ValidateWordIdAsync(wordId))
 			{
@@ -99,6 +100,7 @@ namespace DictionaryApi.BusinessLayer.Services
 			return synonyms;
 		}
 
+        
         private async Task<bool> ValidateWordIdAsync(Guid wordId)
         {
             if(wordId==null)
@@ -106,7 +108,6 @@ namespace DictionaryApi.BusinessLayer.Services
                 throw new AnyHttpException(HttpStatusCode.BadRequest, ConstantResources.errorOnInvalidWordId);
             }
             var details = await wordDetails.GetDetailsByIdAsync(wordId);
-            //var details = wordDetails.GetDetailsByIdAsync(wordId);
             if (details != null)
             {
                 return true;

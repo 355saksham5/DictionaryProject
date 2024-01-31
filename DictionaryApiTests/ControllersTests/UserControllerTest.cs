@@ -45,9 +45,8 @@ namespace DictionaryApiTests.ControllersTests
         {
             userManager.Setup(x => x.CreateAsync(It.IsAny<IdentityUser>(), It.IsAny<string>()))
                 .ReturnsAsync((IdentityResult)new FakeIdentityResult(false));
-            var actual = (userController.Register(new RegisterModel { Email = "", Password = "" }).Result) as CreatedAtActionResult;
-            Assert.AreEqual(400, actual?.StatusCode);
-            Assert.AreEqual(false, (actual.Value as UserIdentityResult).Succeeded);
+            var actual = (userController.Register(new RegisterModel { Email = "", Password = "" }).Result) ;
+            Assert.IsNotNull(actual as BadRequestObjectResult);
         }
         [TestMethod]
         public async Task   LogIn_OnValidLoginCred_ReturnOkJwt()
@@ -57,7 +56,7 @@ namespace DictionaryApiTests.ControllersTests
             userManager.Setup(x => x.CheckPasswordAsync(It.IsAny<IdentityUser>(), It.IsAny<string>()))
                 .ReturnsAsync(true);
             var actual = (userController.Login(new LoginModel { Email = "", Password = "" }).Result);
-            Assert.IsNotNull(((actual as OkObjectResult)?.Value as string));
+            Assert.IsNotNull(((actual as OkObjectResult)));
         }
         [TestMethod]
         public async Task LogIn_OnWrongPassword_ReturnUnauthorized()

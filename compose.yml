@@ -1,0 +1,21 @@
+services:
+ dictionaryapi:
+  build:
+   context: "./DictionaryApi"
+   dockerfile: Dockerfile
+  ports:
+      - "7123:80"
+ dictionaryapp:
+  build:
+   context: .
+   dockerfile: Dockerfile
+  ports:
+      - "7060:80"
+ database:
+    image : mcr.microsoft.com/mssql/server:2017-latest-ubuntu
+    environment:
+         ACCEPT_EULA: "Y"
+         SA_PASSWORD: "Pa55w0rd2021"
+    ports:
+         - "1433:1433"
+    

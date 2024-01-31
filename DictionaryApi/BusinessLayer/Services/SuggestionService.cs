@@ -15,7 +15,7 @@ namespace DictionaryApi.BusinessLayer.Services
 		public async Task<IEnumerable<string?>> GetSuggestionsAsync(string queryWord)
 		{
 			var suggestions = await suggestionApi.GetSuggestionsAsync(queryWord);
-			return suggestions.Select(suggestion => suggestion?.Word).Take(numberOfSuggestions);
+			return suggestions.Select(suggestion => suggestion.Word).Take(numberOfSuggestions);
 
 
 		}

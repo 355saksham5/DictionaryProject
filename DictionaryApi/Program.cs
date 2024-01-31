@@ -20,6 +20,7 @@ using Refit;
 using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
+
 builder.Services.AddControllers();
 builder.Services.AddApiVersioning(x =>
 {
@@ -57,7 +58,15 @@ builder.Services.AddSingleton<IJwtTokenService, JwtTokenService>();
 builder.Services.AddScoped<IUserCacheService, UserCacheService>();
 
 var app = builder.Build();
-
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var context = services.GetRequiredService<AppDbContext>();
+    if (context.Database.GetPendingMigrations().Any())
+    {
+        context.Database.Migrate();
+    }
+}
 app.UseSwagger();
 app.UseSwaggerUI();
 
@@ -71,7 +80,7 @@ if (ConstantResources.isAppStarting)
 	});
 }
 app.UseMiddleware<ExceptionHandlerMiddleware>();
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();

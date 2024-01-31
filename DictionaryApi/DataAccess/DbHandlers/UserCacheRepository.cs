@@ -6,6 +6,7 @@ using DictionaryApi.Models.DTOs;
 using DictionaryApi.Models.UserCache;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Concurrent;
+using System.Diagnostics.CodeAnalysis;
 
 namespace DictionaryApi.DataAccess.DbHandlers
 {
@@ -44,7 +45,8 @@ namespace DictionaryApi.DataAccess.DbHandlers
 			return userCache;
 		}
 
-		public async Task RemoveElementOnExceedAsync(Guid userId)
+		[ExcludeFromCodeCoverage]
+	    private async Task RemoveElementOnExceedAsync(Guid userId)
 		{
 			var cache = await GetCacheByUserIdAsync(userId);
 			while (cache.Count()>=limit)

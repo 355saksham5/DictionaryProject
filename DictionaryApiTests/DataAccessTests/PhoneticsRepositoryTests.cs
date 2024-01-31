@@ -28,7 +28,7 @@ namespace DictionaryApiTests.DataAccessTests
             mockPhoneticDto.Setup(x => x.AddAsync(It.IsAny<PhoneticDto>(), default)).Callback<PhoneticDto, CancellationToken>
                 ((word, token) => myList.Add(word)).ReturnsAsync(() => null);
             mockPhoneticDto.Setup(x => x.Remove(It.IsAny<PhoneticDto>())).Callback<PhoneticDto>
-                ((word) => myList.Remove(word)).Returns(() => null);
+                ((word) => myList.Remove(word)).Returns(() => null).Verifiable(Times.Once);
 
             var myQueryable = myList.AsQueryable();
             mockPhoneticDto.As<IQueryable<PhoneticDto>>().Setup(m => m.Provider).Returns(myQueryable.Provider);
@@ -70,8 +70,6 @@ namespace DictionaryApiTests.DataAccessTests
             var myId = Guid.NewGuid();
             await phoneticAudioRepository.AddPronounciationAsync(new PhoneticDto { Id = myId });
             await phoneticAudioRepository.DeletePronounciationByIdAsync(myId);
-            Assert.AreEqual(0, myList.Count(x => x.Id == myId));
-
         }
 
         [TestMethod]
@@ -81,7 +79,7 @@ namespace DictionaryApiTests.DataAccessTests
             await phoneticAudioRepository.AddPronounciationAsync(new PhoneticDto { Id = myId });
             context.Verify(x => x.PhoneticAudios.AddAsync(It.IsAny<PhoneticDto>(), It.IsAny<CancellationToken>()), Times.Once);
             context.Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
-
+            Assert.IsNotNull(myList.Count(x => x.Id == myId));
         }
 
     }

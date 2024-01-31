@@ -25,7 +25,7 @@ namespace DictionaryApiTests.ControllersTests
         {
             suggestionService.Setup(x => x.GetSuggestionsAsync(It.IsAny<String>())).ReturnsAsync((List<String>)null);
             var actual = await suggestionController.Suggestions(It.IsAny<String>());
-            Assert.IsNotNull(((actual as NotFoundObjectResult)?.Value as ProblemDetails));
+            Assert.IsNotNull(((actual as NotFoundResult)));
 
         }
         [TestMethod]

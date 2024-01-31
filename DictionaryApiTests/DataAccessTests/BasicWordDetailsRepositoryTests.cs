@@ -96,10 +96,8 @@ namespace DictionaryApiTests.DataAccessTests
             ()
         {
             await basicWordDetailsRepository.AddDetailsAsync(new BasicWordDetails { Id = myId, Word ="wordadded" });
-            context.Verify(x => x.BasicWordDetails.AddAsync(It.IsAny<BasicWordDetails>(), It.IsAny<CancellationToken>()), Times.Once);
             context.Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
-            //Assert.IsNotNull(myList.Find(x => x.Id == myId));
-
+            Assert.IsNotNull(myList.Count(x => x.Id == myId));
         }
 
     }

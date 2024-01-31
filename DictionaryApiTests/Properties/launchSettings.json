@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "DictionaryApiTests": {
+      "commandName": "Project"
+    },
+    "Docker": {
+      "commandName": "Docker"
+    }
+  }
+}

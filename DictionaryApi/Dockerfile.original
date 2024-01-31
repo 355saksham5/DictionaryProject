@@ -1,0 +1,19 @@
+FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build-env
+WORKDIR /App
+EXPOSE 7123
+EXPOSE 5252
+
+# Copy everything
+COPY . ./
+# Restore as distinct layers
+RUN dotnet restore
+# Build and publish a release
+RUN dotnet publish -c Release -o out --no-restore
+
+# Build runtime image
+FROM mcr.microsoft.com/dotnet/aspnet:6.0
+WORKDIR /App
+EXPOSE 7123
+EXPOSE 5252
+COPY --from=build-env /App/out .
+ENTRYPOINT ["dotnet", "DictionaryApi.dll"]

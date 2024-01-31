@@ -37,7 +37,7 @@ else
 	app.UseMiddleware<ExceptionHandlerMiddleware>();
 	app.UseStatusCodePagesWithReExecute(ConstantResources.errPagePath+"/{0}");
 }
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthentication();

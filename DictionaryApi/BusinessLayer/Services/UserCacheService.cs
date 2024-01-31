@@ -17,7 +17,7 @@ namespace DictionaryApi.BusinessLayer.Services
 		public UserCacheService(IUserCacheRepository userCacheRepo, IHttpContextAccessor contextAccessor)
 		{
 			this.userCacheRepo = userCacheRepo;
-			userId = new Guid(contextAccessor.HttpContext.User.Claims.FirstOrDefault(c => c.Type.Equals(ConstantResources.claimInJwt))?.Value);
+			userId = new Guid(contextAccessor.HttpContext.User.Claims.FirstOrDefault(c => c.Type.Equals(ConstantResources.claimInJwt)).Value);
 			this.cachedWord = new CachedWord();
 		}
 
