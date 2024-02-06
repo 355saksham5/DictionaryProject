@@ -10,10 +10,12 @@ using System.Text.Json;
 using Microsoft.AspNetCore.Http;
 using System.Net;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using FluentValidation.AspNetCore;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddHttpContextAccessor();
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews().AddFluentValidation(config => config.RegisterValidatorsFromAssembly(Assembly.GetExecutingAssembly()));
 builder.Services.AddTransient<AuthHeaderHandler>();
 builder.Services.AddRefitClient<IDictionaryApi>().ConfigureHttpClient(c =>
 {
@@ -37,7 +39,7 @@ else
 	app.UseMiddleware<ExceptionHandlerMiddleware>();
 	app.UseStatusCodePagesWithReExecute(ConstantResources.errPagePath+"/{0}");
 }
-//app.UseHttpsRedirection();
+app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthentication();

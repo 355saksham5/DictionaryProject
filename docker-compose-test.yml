@@ -1,0 +1,35 @@
+version: "3"
+services:
+ dictionaryapi:
+  build:
+   context: ./Dictionaryapi
+   dockerfile: Dockerfile
+  ports:
+      - "7123:80"
+  depends_on: 
+   - database
+   - externalmeaningapi
+  restart : on-failure
+  environment:
+   ConnectionStrings__DictionaryDBConnection: "Server=database;Database=Dictionary;User=SA;Password=Pa55w0rd2021;TrustServerCertificate=True;"
+   JwtConfiguration__Issuer: "http://dictionaryapi"
+   JwtConfiguration__Audience: "http://dictionaryapi"
+   JwtConfiguration__IssuerSigningKey: "93yT871w-GeTI4Es5-TR4s-Oo00ovFx-sk"
+   BaseAddresses__MeaningApi: "http://externalmeaningapi:8090"
+   ASPNETCORE_ENVIRONMENT: "Testing" 
+ externalmeaningapi:
+    image: andyrbell/mountebank
+    ports:
+    - 2525:2525
+    - 8090:8090
+ database:
+    image : mcr.microsoft.com/mssql/server:2017-latest-ubuntu
+    environment:
+         ACCEPT_EULA: "Y"
+         SA_PASSWORD: "Pa55w0rd2021"
+    ports:
+         - "1433:1433"
+    restart: always
+    
+   
+    

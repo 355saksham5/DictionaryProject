@@ -31,7 +31,7 @@ namespace DictionaryApi.BusinessLayer.Services
 
 		public async Task<BasicWordDetails?> MapBasicWordDetailsAsync(IEnumerable<WordDetails> wordDetails)
 		{
-            BasicWordDetails.Id= Guid.NewGuid();
+            BasicWordDetails.Id = Guid.NewGuid();            
 			BasicWordDetails.Word = wordDetails.FirstOrDefault()?.Word;
 			BasicWordDetails.Origin = wordDetails.FirstOrDefault(wordDetail => wordDetail.Origin!=null && wordDetail.Origin!="")?.Origin;
 			var meanings = wordDetails.Select(wordDetails => wordDetails.Meanings).SelectMany(Meaning => Meaning);

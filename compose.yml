@@ -1,3 +1,4 @@
+
 services:
  dictionaryapi:
   build:
@@ -5,12 +6,21 @@ services:
    dockerfile: Dockerfile
   ports:
       - "7123:80"
+  depends_on: 
+   - database
+  environment:
+   ConnectionStrings__DictionaryDBConnection : "server=database;Database=Dictionary;User=SA;Password=Pa55w0rd2021;TrustServerCertificate=True;"
+   JwtConfiguration__Issuer: http://dictionaryapi
+   JwtConfiguration__Audience: http://dictionaryapi
  dictionaryapp:
   build:
    context: .
    dockerfile: Dockerfile
   ports:
       - "7060:80"
+  environment:
+   BaseAddresses__DictionaryApi: "http://dictionaryapi"
+  
  database:
     image : mcr.microsoft.com/mssql/server:2017-latest-ubuntu
     environment:
@@ -18,4 +28,10 @@ services:
          SA_PASSWORD: "Pa55w0rd2021"
     ports:
          - "1433:1433"
+    restart: always
+    volumes:
+     - mssqldatabase:/var/opt/mssql
+volumes:
+  mssqldatabase:
+   
     

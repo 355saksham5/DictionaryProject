@@ -10,13 +10,13 @@ namespace DictionaryApi.Data
 {
     public class AppDbContext : IdentityDbContext<IdentityUser>
     {
+
         public virtual DbSet<BasicWordDetails> BasicWordDetails { get; set; }
         public virtual DbSet<DefinitionDto> Definitions { get; set; }
         public virtual DbSet<PhoneticDto> PhoneticAudios { get; set; }
 		public virtual DbSet<Synonyms> Synonyms { get; set; }
 		public  virtual DbSet<Antonyms> Antonyms { get; set; }
 		public virtual DbSet<UserCache> UserCache { get; set; }
-
         
         public AppDbContext(DbContextOptions options) : base(options)
         {
@@ -25,6 +25,5 @@ namespace DictionaryApi.Data
         {
             base.OnConfiguring(optionsBuilder);
         }
-        
     }
 }

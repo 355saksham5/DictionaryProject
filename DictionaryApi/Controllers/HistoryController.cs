@@ -11,6 +11,8 @@ using System.Security.Claims;
 namespace DictionaryApi.Controllers
 {
     [Authorize(AuthenticationSchemes = "Bearer")]
+    [ProducesResponseType(typeof(ProblemDetails), 401)]
+    [ProducesResponseType(typeof(IEnumerable<CachedWord>), 200)]
     [ApiController]
 	[Route("api/[controller]")]
 	[ApiVersion(ConstantResources.apiVersion)]

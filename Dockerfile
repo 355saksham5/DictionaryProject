@@ -8,6 +8,7 @@ COPY ["DictionaryApp/DictionaryApp.csproj", "DictionaryApp/"]
 COPY ["DictionaryApi/DictionaryApi.csproj", "DictionaryApi/"]
 RUN dotnet restore "DictionaryApp/DictionaryApp.csproj"
 COPY . .
+
 WORKDIR "/src/DictionaryApp"
 RUN dotnet build "DictionaryApp.csproj" -c Release -o /app/build
 

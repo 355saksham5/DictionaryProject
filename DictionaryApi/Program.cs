@@ -10,6 +10,7 @@ using DictionaryApi.Middlewares;
 using DictionaryApi.Models;
 using DictionaryApi.Models.DTOs;
 using DictionaryApi.Models.UserCache;
+using FluentValidation.AspNetCore;
 using Hangfire;
 using Hangfire.Common;
 using Hangfire.MemoryStorage;
@@ -17,11 +18,11 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Refit;
+using System.Reflection;
 using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
-
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddFluentValidation(config => config.RegisterValidatorsFromAssembly(Assembly.GetExecutingAssembly()));
 builder.Services.AddApiVersioning(x =>
 {
 	x.DefaultApiVersion = new ApiVersion(1, 0);
@@ -35,6 +36,12 @@ builder.Services.AddRefitClient<IMeaningApi>().ConfigureHttpClient(c => c.BaseAd
 builder.Services.AddRefitClient<ISuggestionApi>().ConfigureHttpClient(c => c.BaseAddress = new Uri(builder.Configuration[ConstantResources.getBaseAddressSuggestionApi]));
 builder.Services.AddHangfire(option => option.UseMemoryStorage());
 builder.Services.AddHangfireServer();
+builder.Services.AddCors(o => o.AddPolicy("TestPolicy", builder =>
+{
+    builder.AllowAnyOrigin()
+           .AllowAnyMethod()
+           .AllowAnyHeader();
+}));
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddIdentity<IdentityUser, IdentityRole>(option => {  }).AddEntityFrameworkStores<AppDbContext>();
@@ -48,6 +55,7 @@ builder.Services.AddScoped<IDefinitionsRepository, DefinitionRepository>();
 builder.Services.AddScoped<IAntonymsRepository, AntonymsRepository>();
 builder.Services.AddScoped<ISynonymsRepository, SynonymsRepository>();
 builder.Services.AddScoped<IUserCacheRepository, UserCacheRepository>();
+builder.Services.AddScoped<DataSeeder>();
 
 builder.Services.AddScoped<ICache, Cache>();
 builder.Services.AddScoped<IWordDetailsService, WordDetailsService>();
@@ -62,14 +70,16 @@ using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
     var context = services.GetRequiredService<AppDbContext>();
-    if (context.Database.GetPendingMigrations().Any())
+    var dataSeeder = services.GetRequiredService<DataSeeder>();
+    if (context.Database.GetPendingMigrations().Any() && app.Environment.IsEnvironment("Testing"))
     {
         context.Database.Migrate();
+        await dataSeeder.Seed();
     }
 }
 app.UseSwagger();
 app.UseSwaggerUI();
-
+app.UseCors("TestPolicy");
 if (ConstantResources.isAppStarting)
 {
 	app.Use(async (context, next) =>
@@ -80,7 +90,7 @@ if (ConstantResources.isAppStarting)
 	});
 }
 app.UseMiddleware<ExceptionHandlerMiddleware>();
-//app.UseHttpsRedirection();
+app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();

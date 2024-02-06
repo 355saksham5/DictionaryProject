@@ -2,6 +2,7 @@
 using DictionaryApi.Helpers;
 using DictionaryApi.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
@@ -10,6 +11,7 @@ using System.Net;
 namespace DictionaryApi.Controllers
 {
 	[AllowAnonymous]
+	[EnableCors("TestPolicy")]
     [ApiController]
     [Route("api/[controller]/[action]")]
 	[ApiVersion(ConstantResources.apiVersion)]
@@ -29,7 +31,9 @@ namespace DictionaryApi.Controllers
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> Register([FromBody]RegisterModel model)
+		[ProducesResponseType(typeof(UserIdentityResult),400)]
+        [ProducesResponseType(typeof(UserIdentityResult), 201)]
+        public async Task<IActionResult> Register([FromBody]RegisterModel model)
 		{
             var user = new IdentityUser
             {
@@ -48,7 +52,11 @@ namespace DictionaryApi.Controllers
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> Login([FromBody] LoginModel model)
+        [ProducesResponseType(typeof(LogInResult), 404)]
+        [ProducesResponseType(typeof(LogInResult), 200)]
+        [ProducesResponseType(typeof(LogInResult), 401)]
+  
+        public async Task<IActionResult> Login([FromBody] LoginModel model)
 		{
 			var user = await userManager.FindByEmailAsync(model.Email);
 			if (user == null)

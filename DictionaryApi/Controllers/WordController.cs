@@ -1,5 +1,6 @@
 ﻿using DictionaryApi.BusinessLayer.Services.IServices;
 using DictionaryApi.Helpers;
+using DictionaryApi.Models;
 using DictionaryApi.Models.DTOs;
 using DictionaryApi.Models.UserCache;
 using Hangfire;
@@ -15,7 +16,11 @@ namespace DictionaryApi.Controllers
     [Route("api/[controller]/[action]")]
 	[ApiVersion(ConstantResources.apiVersion)]
     [ResponseCache(Duration = ConstantResources.maxAgeCache)]
-	public class WordController : ControllerBase
+    [ProducesResponseType(typeof(ProblemDetails), 401)]
+    [ProducesResponseType(typeof(ProblemDetails), 400)]
+    [ProducesResponseType(typeof(ErrorModel), 404)]
+
+    public class WordController : ControllerBase
     {
         private readonly IWordDetailsService wordDetailsService;
         public WordController(IWordDetailsService wordDetail)
@@ -25,6 +30,7 @@ namespace DictionaryApi.Controllers
 
 
         [HttpGet]
+        [ProducesResponseType(typeof(BasicWordDetails),200)]
         public async Task<IActionResult> BasicDetails([Required] string queryWord)
         {
             var basicDetails = await wordDetailsService.GetBasicDetailsAsync(queryWord);
@@ -32,6 +38,7 @@ namespace DictionaryApi.Controllers
         }
 
         [HttpGet]
+        [ProducesResponseType(typeof(BasicWordDetails), 200)]
         public async Task<IActionResult> BasicDetailsById(Guid wordId)
         {
             var basicDetails = await wordDetailsService.GetBasicDetailsByIdAsync(wordId);
@@ -39,6 +46,7 @@ namespace DictionaryApi.Controllers
 		}
 
         [HttpGet]
+        [ProducesResponseType(typeof(Antonyms), 200)]
         public async Task<IActionResult> Antonyms(Guid wordId)
         {
             var antonyms = await wordDetailsService.GetAntonymsAsync(wordId);
@@ -46,7 +54,7 @@ namespace DictionaryApi.Controllers
 		}
 
         [HttpGet]
-
+        [ProducesResponseType(typeof(Synonyms), 200)]
         public async Task<IActionResult> Synonyms(Guid wordId)
         {
             var synonyms = await wordDetailsService.GetSynonymsAsync(wordId);
@@ -54,7 +62,7 @@ namespace DictionaryApi.Controllers
 		}
 
         [HttpGet]
-
+        [ProducesResponseType(typeof(String), 200)]
         public async Task<IActionResult> Pronounciation(Guid wordId)
         {
             var pronounciation = await wordDetailsService.GetPronounciationAsync(wordId);
@@ -62,6 +70,7 @@ namespace DictionaryApi.Controllers
 		}
 
         [HttpGet]
+        [ProducesResponseType(typeof(DefinitionDto), 200)]
         public async Task<IActionResult> Definition(int index , Guid wordId)
         {
             var definition = await wordDetailsService.GetDefinitionAsync(index,wordId);

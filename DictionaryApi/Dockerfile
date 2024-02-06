@@ -3,8 +3,8 @@ WORKDIR /App
 EXPOSE 8080
 # Copy everything
 COPY . ./
-# Restore as distinct layers
 RUN dotnet restore
+
 # Build and publish a release
 RUN dotnet publish -c Release -o out --no-restore
 

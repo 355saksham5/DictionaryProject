@@ -1,0 +1,24 @@
+{
+  "name": "dictionaryapiisolatedtests",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": " mocha TestSequence.js",
+    "startExtApi": "node MockedExternalApi/PostResponse.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "chai": "^4.1.0",
+    "cryptojs": "^2.5.3",
+    "eslint": "^8.56.0",
+    "hippie-swagger": "^3.3.2",
+    "jsonwebtoken": "^9.0.2",
+    "mocha": "^10.2.0",
+    "mountebank": "^2.9.1",
+    "node-fetch": "^3.3.2",
+    "swagger-parser": "^10.0.3"
+  }
+}
